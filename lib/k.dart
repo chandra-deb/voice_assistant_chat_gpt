@@ -1,7 +1,5 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
-import 'package:speech_to_text/speech_recognition_result.dart';
-import 'package:speech_to_text/speech_to_text.dart';
 import 'package:voice_chat_gpt/services/chat_gpt_service.dart';
 
 void main() {
@@ -14,7 +12,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
-      title: 'ChatGPT-3',
+      title: 'Flutter ChatGPT API Example by justecdev',
       home: ChatPage(),
       debugShowCheckedModeBanner: false,
     );
@@ -23,6 +21,8 @@ class MyApp extends StatelessWidget {
 
 const backgroundColor = Color(0xff343541);
 const botBackgroundColor = Color(0xff444654);
+
+enum ChatMessageType { user, bot }
 
 class ChatMessage {
   final String text;
@@ -44,78 +44,16 @@ class _ChatPageState extends State<ChatPage> {
   final _textController = TextEditingController();
   final _scrollController = ScrollController();
   final List<ChatMessage> _messages = [];
-  String conversation = '';
 
+  String? _parentMessageId;
+  String? _conversationId;
   late bool isLoading;
-  final SpeechToText _speechToText = SpeechToText();
-  bool _speechEnabled = false;
-  String _lastWords = '';
 
   @override
   void initState() {
     super.initState();
+
     isLoading = false;
-    _initSpeech();
-  }
-
-  /// This has to happen only once per app
-  void _initSpeech() async {
-    _speechEnabled = await _speechToText.initialize();
-    setState(() {});
-  }
-
-  /// Each time to start a speech recognition session
-  Future<void> _startListening() async {
-    await _speechToText.listen(
-        onResult: _onSpeechResult,
-        partialResults: false,
-        listenMode: ListenMode.search);
-  }
-
-  /// Manually stop the active speech recognition session
-  /// Note that there are also timeouts that each platform enforces
-  /// and the SpeechToText plugin supports setting timeouts on the
-  /// listen method.
-  Future<void> _stopListening() async {
-    await _speechToText.stop();
-    setState(() {});
-  }
-
-  /// This is the callback that the SpeechToText plugin calls when
-  /// the platform returns recognized words.
-  void _onSpeechResult(SpeechRecognitionResult result) async {
-    _lastWords = result.recognizedWords;
-    await messageAdder(_lastWords);
-  }
-
-  Future<void> messageAdder(String text) async {
-    setState(
-      () {
-        _messages.add(
-          ChatMessage(
-            text: text,
-            chatMessageType: ChatMessageType.user,
-          ),
-        );
-        isLoading = true;
-      },
-    );
-    var input = text;
-    Future.delayed(const Duration(milliseconds: 50)).then((_) => _scrollDown());
-    var newMessage = await ChatGptService().generateResponse(
-      message: conversation += "\nHuman: $input",
-    );
-    conversation += "\nAI: ${newMessage.message}";
-    setState(() {
-      isLoading = false;
-      _messages.add(
-        ChatMessage(
-          text: newMessage.message,
-          chatMessageType: ChatMessageType.bot,
-        ),
-      );
-    });
-    Future.delayed(const Duration(milliseconds: 50)).then((_) => _scrollDown());
   }
 
   @override
@@ -126,7 +64,7 @@ class _ChatPageState extends State<ChatPage> {
         title: const Padding(
           padding: EdgeInsets.all(8.0),
           child: Text(
-            'ChatGPT',
+            'Flutter ChatGPT API Example @coskuncay',
             maxLines: 2,
             textAlign: TextAlign.center,
           ),
@@ -155,36 +93,11 @@ class _ChatPageState extends State<ChatPage> {
                 children: [
                   _buildInput(),
                   _buildSubmit(),
-                  _buildMic(),
                 ],
               ),
             ),
           ],
         ),
-      ),
-    );
-  }
-
-  Widget _buildMic() {
-    return Visibility(
-      visible: !isLoading,
-      child: Container(
-        color: botBackgroundColor,
-        child: IconButton(
-            icon: Icon(
-              Icons.mic,
-              color: _speechToText.isListening
-                  ? Colors.red
-                  : const Color.fromRGBO(142, 142, 160, 1),
-            ),
-            onPressed: () async {
-              // If not yet listening for speech start, otherwise stop
-              if (_speechToText.isNotListening) {
-                await _startListening();
-              } else {
-                await _stopListening();
-              }
-            }),
       ),
     );
   }
@@ -195,15 +108,47 @@ class _ChatPageState extends State<ChatPage> {
       child: Container(
         color: botBackgroundColor,
         child: IconButton(
-            icon: const Icon(
-              Icons.send_rounded,
-              color: Color.fromRGBO(142, 142, 160, 1),
-            ),
-            onPressed: () async {
-              final text = _textController.text;
-              _textController.clear();
-              await messageAdder(text);
-            }),
+          icon: const Icon(
+            Icons.send_rounded,
+            color: Color.fromRGBO(142, 142, 160, 1),
+          ),
+          onPressed: () async {
+            setState(
+              () {
+                _messages.add(
+                  ChatMessage(
+                    text: _textController.text,
+                    chatMessageType: ChatMessageType.user,
+                  ),
+                );
+                isLoading = true;
+              },
+            );
+            var input = _textController.text;
+            _textController.clear();
+            Future.delayed(const Duration(milliseconds: 50))
+                .then((_) => _scrollDown());
+            var newMessage = await ChatGptService().generateResponse(
+              message: input,
+              // conversationId: _conversationId,
+              // parentMessageId: _parentMessageId,
+            );
+            setState(() {
+              // _conversationId = newMessage.conversationId;
+              // _parentMessageId = newMessage.messageId;
+              isLoading = false;
+              _messages.add(
+                ChatMessage(
+                  text: newMessage.message,
+                  chatMessageType: ChatMessageType.bot,
+                ),
+              );
+            });
+            _textController.clear();
+            Future.delayed(const Duration(milliseconds: 50))
+                .then((_) => _scrollDown());
+          },
+        ),
       ),
     );
   }
@@ -274,7 +219,9 @@ class ChatMessageWidget extends StatelessWidget {
                   child: CircleAvatar(
                     backgroundColor: const Color.fromRGBO(16, 163, 127, 1),
                     child: Image.asset(
-                      'assets/bot.jpg',
+                      'assets/bot.png',
+                      color: Colors.white,
+                      scale: 1.5,
                     ),
                   ),
                 )

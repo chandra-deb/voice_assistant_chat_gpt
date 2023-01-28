@@ -2,23 +2,15 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
-import 'package:uuid/uuid.dart';
 
 enum ChatMessageType { user, bot }
 
 class ChatResponse {
   String message;
-  String? conversationId;
-  String? messageId;
 
   ChatResponse({
     required this.message,
-    this.conversationId,
-    this.messageId,
-  }) {
-    conversationId ??= const Uuid().v4();
-    messageId ??= const Uuid().v4();
-  }
+  });
 }
 
 class ChatGptService {
@@ -28,9 +20,8 @@ class ChatGptService {
 
   Future<ChatResponse> generateResponse({
     required String message,
-    String? conversationId,
-    String? parentMessageId,
   }) async {
+    print(message);
     String url =
         "https://api.openai.com/v1/engines/text-davinci-003/completions";
     Map<String, String> headers = {
@@ -40,22 +31,19 @@ class ChatGptService {
     String body = json.encode({
       "prompt": message,
       "temperature": 0.9,
-      "max_tokens": 150,
+      "max_tokens": 1000,
       "top_p": 1,
       "frequency_penalty": 0,
       "presence_penalty": 0.6,
-      "stop": [" Human:", " AI:"]
+      "stop": [" Human:", " AI:", " Robot:", " Computer:"],
     });
 
     try {
       Response response =
           await _dio.post(url, data: body, options: Options(headers: headers));
       final data = response.data['choices'][0]['text'];
-      print(response.data);
-      return ChatResponse(
-          message: data,
-          conversationId: conversationId,
-          messageId: parentMessageId);
+      // print(response.data);
+      return ChatResponse(message: data);
     } on DioError catch (error) {
       throw Exception(error.message);
     }
