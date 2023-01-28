@@ -41,7 +41,6 @@ class ChatPage extends StatefulWidget {
 }
 
 class _ChatPageState extends State<ChatPage> {
-  final _textController = TextEditingController();
   final _scrollController = ScrollController();
   final List<ChatMessage> _messages = [];
   String conversation = '';
@@ -153,8 +152,8 @@ class _ChatPageState extends State<ChatPage> {
               padding: const EdgeInsets.all(8.0),
               child: Row(
                 children: [
-                  _buildInput(),
-                  _buildSubmit(),
+                  // _buildInput(),
+                  // _buildSubmit(),
                   _buildMic(),
                 ],
               ),
@@ -185,44 +184,6 @@ class _ChatPageState extends State<ChatPage> {
                 await _stopListening();
               }
             }),
-      ),
-    );
-  }
-
-  Widget _buildSubmit() {
-    return Visibility(
-      visible: !isLoading,
-      child: Container(
-        color: botBackgroundColor,
-        child: IconButton(
-            icon: const Icon(
-              Icons.send_rounded,
-              color: Color.fromRGBO(142, 142, 160, 1),
-            ),
-            onPressed: () async {
-              final text = _textController.text;
-              _textController.clear();
-              await messageAdder(text);
-            }),
-      ),
-    );
-  }
-
-  Expanded _buildInput() {
-    return Expanded(
-      child: TextField(
-        textCapitalization: TextCapitalization.sentences,
-        style: const TextStyle(color: Colors.white),
-        controller: _textController,
-        decoration: const InputDecoration(
-          fillColor: botBackgroundColor,
-          filled: true,
-          border: InputBorder.none,
-          focusedBorder: InputBorder.none,
-          enabledBorder: InputBorder.none,
-          errorBorder: InputBorder.none,
-          disabledBorder: InputBorder.none,
-        ),
       ),
     );
   }
