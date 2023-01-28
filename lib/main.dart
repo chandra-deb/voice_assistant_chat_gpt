@@ -1,5 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 import 'package:speech_to_text/speech_recognition_result.dart';
 import 'package:speech_to_text/speech_to_text.dart';
 import 'package:voice_chat_gpt/services/chat_gpt_service.dart';
@@ -43,6 +44,7 @@ class ChatPage extends StatefulWidget {
 class _ChatPageState extends State<ChatPage> {
   final _scrollController = ScrollController();
   final SpeechToText _speechToText = SpeechToText();
+  FlutterTts flutterTts = FlutterTts();
 
   final List<ChatMessage> _messages = [];
   String conversation = '';
@@ -55,6 +57,11 @@ class _ChatPageState extends State<ChatPage> {
     super.initState();
     isLoading = false;
     _initSpeech();
+    flutterTts.setSpeechRate(0.4);
+  }
+
+  Future _speak(String text) async {
+    var result = await flutterTts.speak(text);
   }
 
   /// This has to happen only once per app
