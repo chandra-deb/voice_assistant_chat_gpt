@@ -21,7 +21,6 @@ class ChatGptService {
   Future<ChatResponse> generateResponse({
     required String message,
   }) async {
-    print(message);
     String url =
         "https://api.openai.com/v1/engines/text-davinci-003/completions";
     Map<String, String> headers = {
