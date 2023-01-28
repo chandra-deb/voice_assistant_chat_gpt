@@ -102,11 +102,13 @@ class _ChatPageState extends State<ChatPage> {
     );
     var input = text;
     Future.delayed(const Duration(milliseconds: 50)).then((_) => _scrollDown());
+    conversation = "$conversation${'Human'}: $input\nAI:";
     var newMessage = await ChatGptService().generateResponse(
       // message: "$conversation \nHuman: $input",
-      message: "Human: $input\nAI: ",
+      message: conversation,
     );
-    conversation = "$conversation \nAI: ${newMessage.message}";
+    _speak(newMessage.message);
+    conversation = "$conversation${newMessage.message}\n";
     setState(() {
       isLoading = false;
       _messages.add(
