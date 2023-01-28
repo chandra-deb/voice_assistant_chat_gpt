@@ -42,12 +42,12 @@ class ChatPage extends StatefulWidget {
 
 class _ChatPageState extends State<ChatPage> {
   final _scrollController = ScrollController();
+  final SpeechToText _speechToText = SpeechToText();
+
   final List<ChatMessage> _messages = [];
   String conversation = '';
 
   late bool isLoading;
-  final SpeechToText _speechToText = SpeechToText();
-  bool _speechEnabled = false;
   String _lastWords = '';
 
   @override
@@ -59,16 +59,17 @@ class _ChatPageState extends State<ChatPage> {
 
   /// This has to happen only once per app
   void _initSpeech() async {
-    _speechEnabled = await _speechToText.initialize();
-    setState(() {});
+    await _speechToText.initialize();
   }
 
   /// Each time to start a speech recognition session
   Future<void> _startListening() async {
+    setState(() {});
     await _speechToText.listen(
         onResult: _onSpeechResult,
         partialResults: false,
         listenMode: ListenMode.search);
+    print('Stopped Listening');
   }
 
   /// Manually stop the active speech recognition session
@@ -102,9 +103,10 @@ class _ChatPageState extends State<ChatPage> {
     var input = text;
     Future.delayed(const Duration(milliseconds: 50)).then((_) => _scrollDown());
     var newMessage = await ChatGptService().generateResponse(
-      message: conversation += "\nHuman: $input",
+      // message: "$conversation \nHuman: $input",
+      message: "Human: $input\nAI: ",
     );
-    conversation += "\nAI: ${newMessage.message}";
+    conversation = "$conversation \nAI: ${newMessage.message}";
     setState(() {
       isLoading = false;
       _messages.add(
@@ -150,13 +152,7 @@ class _ChatPageState extends State<ChatPage> {
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Row(
-                children: [
-                  // _buildInput(),
-                  // _buildSubmit(),
-                  _buildMic(),
-                ],
-              ),
+              child: _buildMic(),
             ),
           ],
         ),
@@ -170,6 +166,7 @@ class _ChatPageState extends State<ChatPage> {
       child: Container(
         color: botBackgroundColor,
         child: IconButton(
+            iconSize: 40,
             icon: Icon(
               Icons.mic,
               color: _speechToText.isListening
