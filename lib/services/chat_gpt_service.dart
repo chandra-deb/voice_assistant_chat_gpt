@@ -2,6 +2,7 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
+import 'package:voice_chat_gpt/constants/constants.dart';
 
 class ChatResponse {
   String message;
@@ -12,7 +13,7 @@ class ChatResponse {
 }
 
 class ChatGptService {
-  final String _apiKey = "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";
+  final String _apiKey = apiKey!;
 
   Future<ChatResponse> generateResponse({
     required String message,
