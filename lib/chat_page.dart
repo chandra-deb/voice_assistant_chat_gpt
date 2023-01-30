@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_tts/flutter_tts.dart';
+import 'package:provider/provider.dart';
 import 'package:speech_to_text/speech_recognition_result.dart';
 import 'package:speech_to_text/speech_to_text.dart';
 
 import 'constants/constants.dart';
 import 'models/chat_message_model.dart';
+import 'providers/text_to_speech_provider.dart';
 import 'services/chat_gpt_service.dart';
-import 'widgets/chat_message_widget.dart';
+import 'widgets/chat_message_list_widget.dart';
 
 class ChatPage extends StatefulWidget {
   const ChatPage({super.key});
@@ -18,11 +19,10 @@ class ChatPage extends StatefulWidget {
 class _ChatPageState extends State<ChatPage> {
   final _scrollController = ScrollController();
   final SpeechToText _speechToText = SpeechToText();
-  FlutterTts flutterTts = FlutterTts();
 
   final List<ChatMessage> _messages = [];
   String conversation = '';
-
+  late bool isListening;
   late bool isLoading;
   String _lastWords = '';
 
@@ -30,12 +30,8 @@ class _ChatPageState extends State<ChatPage> {
   void initState() {
     super.initState();
     isLoading = false;
+    isListening = false;
     _initSpeech();
-    flutterTts.setSpeechRate(0.4);
-  }
-
-  Future _speak(String text) async {
-    await flutterTts.speak(text);
   }
 
   /// This has to happen only once per app
@@ -45,12 +41,14 @@ class _ChatPageState extends State<ChatPage> {
 
   /// Each time to start a speech recognition session
   Future<void> _startListening() async {
-    setState(() {});
+    setState(() {
+      isListening = true;
+    });
     await _speechToText.listen(
-        onResult: _onSpeechResult,
-        partialResults: false,
-        listenMode: ListenMode.search);
-    print('Stopped Listening');
+      onResult: _onSpeechResult,
+      partialResults: false,
+      listenMode: ListenMode.search,
+    );
   }
 
   /// Manually stop the active speech recognition session
@@ -58,13 +56,18 @@ class _ChatPageState extends State<ChatPage> {
   /// and the SpeechToText plugin supports setting timeouts on the
   /// listen method.
   Future<void> _stopListening() async {
+    setState(() {
+      isListening = false;
+    });
     await _speechToText.stop();
-    setState(() {});
   }
 
   /// This is the callback that the SpeechToText plugin calls when
   /// the platform returns recognized words.
   void _onSpeechResult(SpeechRecognitionResult result) async {
+    setState(() {
+      isListening = false;
+    });
     _lastWords = result.recognizedWords;
     await messageAdder(_lastWords);
   }
@@ -88,7 +91,8 @@ class _ChatPageState extends State<ChatPage> {
       // message: "$conversation \nHuman: $input",
       message: conversation,
     );
-    _speak(newMessage.message);
+    // ignore: use_build_context_synchronously
+    context.read<TextToSpeechProvider>().speak(newMessage.message);
     conversation = "$conversation${newMessage.message}\n";
     setState(() {
       isLoading = false;
@@ -122,7 +126,10 @@ class _ChatPageState extends State<ChatPage> {
         child: Column(
           children: [
             Expanded(
-              child: _buildList(),
+              child: ChatMessageListViewWidget(
+                messages: _messages,
+                scrollController: _scrollController,
+              ),
             ),
             Visibility(
               visible: isLoading,
@@ -152,33 +159,19 @@ class _ChatPageState extends State<ChatPage> {
             iconSize: 40,
             icon: Icon(
               Icons.mic,
-              color: _speechToText.isListening
+              color: isListening
                   ? Colors.red
                   : const Color.fromRGBO(142, 142, 160, 1),
             ),
             onPressed: () async {
               // If not yet listening for speech start, otherwise stop
-              if (_speechToText.isNotListening) {
+              if (!isListening) {
                 await _startListening();
               } else {
                 await _stopListening();
               }
             }),
       ),
-    );
-  }
-
-  ListView _buildList() {
-    return ListView.builder(
-      controller: _scrollController,
-      itemCount: _messages.length,
-      itemBuilder: (context, index) {
-        var message = _messages[index];
-        return ChatMessageWidget(
-          text: message.text,
-          chatMessageType: message.chatMessageType,
-        );
-      },
     );
   }
 
