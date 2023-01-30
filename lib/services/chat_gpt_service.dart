@@ -14,7 +14,7 @@ class ChatResponse {
 }
 
 class ChatGptService {
-  final String _apiKey = "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";
+  final String _apiKey = "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";
 
   Future<ChatResponse> generateResponse({
     required String message,
