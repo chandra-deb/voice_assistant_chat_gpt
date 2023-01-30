@@ -3,8 +3,6 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 
-enum ChatMessageType { user, bot }
-
 class ChatResponse {
   String message;
 
