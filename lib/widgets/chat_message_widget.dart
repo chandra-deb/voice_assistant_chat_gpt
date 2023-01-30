@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../constants/constants.dart';
 import '../models/chat_message_model.dart';
+import '../providers/text_to_speech_provider.dart';
 
 class ChatMessageWidget extends StatelessWidget {
   const ChatMessageWidget(
@@ -43,23 +45,67 @@ class ChatMessageWidget extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Container(
-                  padding: const EdgeInsets.all(8.0),
-                  decoration: const BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(8.0)),
-                  ),
-                  child: Text(
-                    text,
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyLarge
-                        ?.copyWith(color: Colors.white),
-                  ),
-                ),
+                IndividualMessage(text: text, type: chatMessageType),
               ],
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class IndividualMessage extends StatelessWidget {
+  const IndividualMessage({
+    Key? key,
+    required this.text,
+    required this.type,
+  }) : super(key: key);
+
+  final String text;
+  final ChatMessageType type;
+
+  @override
+  Widget build(BuildContext context) {
+    if (type == ChatMessageType.bot) {
+      return GestureDetector(
+        onLongPress: () {
+          final ttsProvider = context.read<TextToSpeechProvider>();
+          if (ttsProvider.isSpeaking) {
+            ttsProvider.stopSpeaking();
+          } else {
+            ttsProvider.speak(text);
+          }
+        },
+        child: RawIndividualMessage(text: text),
+      );
+    } else {
+      return RawIndividualMessage(text: text);
+    }
+  }
+}
+
+class RawIndividualMessage extends StatelessWidget {
+  const RawIndividualMessage({
+    Key? key,
+    required this.text,
+  }) : super(key: key);
+
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(8.0),
+      decoration: const BoxDecoration(
+        borderRadius: BorderRadius.all(Radius.circular(8.0)),
+      ),
+      child: Text(
+        text,
+        style: Theme.of(context)
+            .textTheme
+            .bodyLarge
+            ?.copyWith(color: Colors.white),
       ),
     );
   }
