@@ -12,9 +12,15 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      title: 'ChatGPT-3',
-      home: ChatPage(),
+      title: 'Friendly',
+      home: MultiProvider(
+        providers: [
+          Provider<TextToSpeechProvider>(
+            create: (context) => TextToSpeechProvider(),
+          ),
+        ],
+        child: const ChatPage(),
+      ),
       debugShowCheckedModeBanner: false,
     );
   }
