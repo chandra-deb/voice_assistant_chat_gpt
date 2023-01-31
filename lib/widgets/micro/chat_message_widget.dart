@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:provider/provider.dart';
 
-import '../constants/constants.dart';
-import '../models/chat_message_model.dart';
-import '../providers/text_to_speech_provider.dart';
+import '../../constants/constants.dart';
+import '../../models/chat_message_model.dart';
+import '../../providers/text_to_speech_provider.dart';
 
 class ChatMessageWidget extends StatelessWidget {
   const ChatMessageWidget(
