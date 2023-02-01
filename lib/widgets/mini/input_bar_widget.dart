@@ -54,7 +54,7 @@ class _InputBarWidgetState extends State<InputBarWidget> {
               )
             : IconButton(
                 onPressed: () {
-                  widget.addMessage(_textController.text);
+                  widget.addMessage(_textController.text.trim());
                   _textController.clear();
                   _focusNode.unfocus();
                 },
