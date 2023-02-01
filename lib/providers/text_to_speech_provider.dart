@@ -9,10 +9,16 @@ class TextToSpeechProvider {
     _tts.setSpeechRate(0.4);
   }
 
-  Future<void> speak(String text) async {
+  Future<void> speak({
+    required String text,
+    void Function()? setOnSpeakingCompletion,
+  }) async {
     isSpeaking = true;
     await _tts.speak(text);
     _tts.setCompletionHandler(() {
+      if (setOnSpeakingCompletion != null) {
+        setOnSpeakingCompletion();
+      }
       isSpeaking = false;
     });
   }
