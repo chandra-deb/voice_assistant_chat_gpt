@@ -75,7 +75,10 @@ class IndividualMessage extends StatelessWidget {
           if (ttsProvider.isSpeaking) {
             ttsProvider.stopSpeaking();
           } else {
-            ttsProvider.speak(text);
+            ttsProvider.speak(
+              text: text,
+              setOnSpeakingCompletion: () {},
+            );
           }
         },
         child: RawIndividualMessage(text: text),
