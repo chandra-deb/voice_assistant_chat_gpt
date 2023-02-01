@@ -2,7 +2,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
-import 'package:voice_chat_gpt/chat_page.dart';
+import 'package:voice_chat_gpt/home_page.dart';
+import 'package:voice_chat_gpt/providers/conversation_provider.dart';
 
 import 'providers/text_to_speech_provider.dart';
 
@@ -24,8 +25,11 @@ class MyApp extends StatelessWidget {
           Provider<TextToSpeechProvider>(
             create: (context) => TextToSpeechProvider(),
           ),
+          Provider<ConversationProvider>(
+            create: (context) => ConversationProvider(),
+          ),
         ],
-        child: const ChatPage(),
+        child: const HomePage(),
       ),
       debugShowCheckedModeBanner: false,
     );
