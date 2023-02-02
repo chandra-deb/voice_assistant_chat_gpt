@@ -1,20 +1,21 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:voice_chat_gpt/providers/messages_list_provider.dart';
 
-import '../../models/chat_message_model.dart';
 import '../micro/chat_message_widget.dart';
 
 class ChatMessageListViewWidget extends StatelessWidget {
-  final List<ChatMessage> messages;
   final ScrollController scrollController;
+
   const ChatMessageListViewWidget({
     Key? key,
-    required this.messages,
     required this.scrollController,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final messages = context.watch<MessagesListProvider>().messages;
     return ListView.builder(
       controller: scrollController,
       itemCount: messages.length,
