@@ -48,16 +48,13 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> messageAdder(String text) async {
-    setState(
-      () {
-        messagesListProvider.addMessage(
-          ChatMessage(
-            text: text,
-            chatMessageType: ChatMessageType.user,
-          ),
-        );
-      },
+    messagesListProvider.addMessage(
+      ChatMessage(
+        text: text,
+        chatMessageType: ChatMessageType.user,
+      ),
     );
+
     Future.delayed(const Duration(milliseconds: 50)).then((_) => _scrollDown());
 
     try {
