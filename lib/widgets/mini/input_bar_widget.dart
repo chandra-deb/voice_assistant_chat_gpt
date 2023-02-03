@@ -3,9 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:voice_chat_gpt/widgets/micro/text_input_widget.dart';
 
 import '../micro/mic_widget.dart';
+import '../micro/response_loading_widget.dart';
 
 class InputBarWidget extends StatefulWidget {
-  final void Function(String text) addMessage;
+  final Future<void> Function(String text) addMessage;
 
   const InputBarWidget({
     Key? key,
@@ -19,7 +20,8 @@ class InputBarWidget extends StatefulWidget {
 class _InputBarWidgetState extends State<InputBarWidget> {
   late final TextEditingController _textController;
   late final FocusNode _focusNode;
-  bool showMic = true;
+  bool _showMic = true;
+  bool _isLoadingResponse = false;
 
   @override
   void initState() {
@@ -33,11 +35,11 @@ class _InputBarWidgetState extends State<InputBarWidget> {
     print(_textController.text);
     if (_textController.text.isEmpty) {
       setState(() {
-        showMic = true;
+        _showMic = true;
       });
     } else {
       setState(() {
-        showMic = false;
+        _showMic = false;
       });
     }
   }
@@ -48,23 +50,36 @@ class _InputBarWidgetState extends State<InputBarWidget> {
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
         TextInputWidget(textController: _textController, focusNode: _focusNode),
-        showMic
-            ? MicWidget(
-                addMessage: widget.addMessage,
-              )
-            : IconButton(
-                onPressed: () {
-                  widget.addMessage(_textController.text.trim());
-                  _textController.clear();
-                  _focusNode.unfocus();
-                },
-                icon: const Icon(
-                  Icons.send,
-                  color: Colors.blueAccent,
-                  size: 40,
-                ),
-              ),
+        _isLoadingResponse
+            ? const ResponseLoadingWidget()
+            : _showMic
+                ? MicWidget(
+                    addMessage: setResponseLoading,
+                  )
+                : IconButton(
+                    onPressed: () async {
+                      final text = _textController.text.trim();
+                      _textController.clear();
+                      _focusNode.unfocus();
+                      await setResponseLoading(text);
+                    },
+                    icon: const Icon(
+                      Icons.send,
+                      color: Colors.blueAccent,
+                      size: 40,
+                    ),
+                  ),
       ],
     );
+  }
+
+  Future<void> setResponseLoading(String text) async {
+    setState(() {
+      _isLoadingResponse = true;
+    });
+    await widget.addMessage(text);
+    setState(() {
+      _isLoadingResponse = false;
+    });
   }
 }
