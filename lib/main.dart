@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
       title: 'Friendly',
       home: MultiProvider(
         providers: [
-          Provider<TextToSpeechProvider>(
+          ChangeNotifierProvider<TextToSpeechProvider>(
             create: (context) => TextToSpeechProvider(),
           ),
           Provider<ConversationProvider>(
