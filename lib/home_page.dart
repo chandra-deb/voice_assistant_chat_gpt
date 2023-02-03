@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:provider/provider.dart';
 
 import 'constants/constants.dart';
@@ -9,7 +8,6 @@ import 'providers/messages_list_provider.dart';
 import 'providers/text_to_speech_provider.dart';
 import 'widgets/mini/chat_message_list_widget.dart';
 import 'widgets/mini/input_bar_widget.dart';
-import 'widgets/mini/speaking_indicator_widget.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -21,30 +19,10 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final _scrollController = ScrollController();
   late final MessagesListProvider messagesListProvider;
-  late final OverlayState overlay;
-  late OverlayEntry _overlayEntry;
-
   @override
   void initState() {
     super.initState();
     messagesListProvider = context.read<MessagesListProvider>();
-    overlay = Overlay.of(context)!;
-    _overlayEntry = OverlayEntry(
-      builder: (ctx) {
-        return Positioned(
-          bottom: MediaQuery.of(ctx).size.height / 6,
-          left: (MediaQuery.of(ctx).size.width -
-                  (MediaQuery.of(ctx).size.width / 2.5)) /
-              2,
-          child: SpeakingIndicatorWidget(
-            onClose: () {
-              context.read<TextToSpeechProvider>().stopSpeaking();
-              closeOverLay();
-            },
-          ),
-        ).animate().fadeIn();
-      },
-    );
   }
 
   Future<void> messageAdder(String text) async {
@@ -66,9 +44,7 @@ class _HomePageState extends State<HomePage> {
       await context.read<TextToSpeechProvider>().speak(
             // ignore: use_build_context_synchronously
             text: repliedMessage,
-            setOnSpeakingCompletion: closeOverLay,
           );
-      showOverlay();
       // ignore: use_build_context_synchronously
 
       messagesListProvider.addMessage(
@@ -83,14 +59,6 @@ class _HomePageState extends State<HomePage> {
       final snackBar = SnackBar(content: Text(e.toString()));
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
     }
-  }
-
-  showOverlay() {
-    overlay.insert(_overlayEntry);
-  }
-
-  void closeOverLay() {
-    _overlayEntry.remove();
   }
 
   @override
@@ -126,8 +94,6 @@ class _HomePageState extends State<HomePage> {
                           color: Colors.red,
                           child: ChatMessageListViewWidget(
                             scrollController: _scrollController,
-                            showOverlay: showOverlay,
-                            closeOverLay: closeOverLay,
                           ),
                         ),
                       ),
