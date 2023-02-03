@@ -85,7 +85,6 @@ class _IndividualMessageState extends State<IndividualMessage> {
               ElevatedButton(
                 onPressed: () async {
                   Navigator.pop(context);
-                  await Share.share(widget.text);
                   Clipboard.setData(ClipboardData(text: widget.text))
                       .then((value) {
                     ScaffoldMessenger.of(context).showSnackBar(
