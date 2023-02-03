@@ -1,17 +1,21 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+
 import 'package:flutter/material.dart';
 import 'package:loading_indicator/loading_indicator.dart';
+import 'package:provider/provider.dart';
+
+import '../../providers/text_to_speech_provider.dart';
 
 class SpeakingIndicatorWidget extends StatelessWidget {
-  final void Function() onClose;
+  // final void Function() onClose;
   const SpeakingIndicatorWidget({
     Key? key,
-    required this.onClose,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Material(
+    return Visibility(
+      visible: context.watch<TextToSpeechProvider>().isSpeaking,
       child: Container(
         color: Colors.amber,
         width: MediaQuery.of(context).size.width / 2.5,
@@ -20,12 +24,12 @@ class SpeakingIndicatorWidget extends StatelessWidget {
           children: [
             const Expanded(
               child: LoadingIndicator(
-                indicatorType: Indicator.lineScaleParty,
+                indicatorType: Indicator.lineScalePulseOutRapid,
               ),
             ),
             IconButton(
               onPressed: (() {
-                onClose();
+                context.read<TextToSpeechProvider>().stopSpeaking();
               }),
               icon: const Icon(
                 Icons.close,
