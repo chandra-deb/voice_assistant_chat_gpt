@@ -8,14 +8,10 @@ import '../../providers/text_to_speech_provider.dart';
 import 'raw_individual_message_widget.dart';
 
 class IndividualMessage extends StatefulWidget {
-  final void Function() showOverlay;
-  final void Function() closeOverLay;
   const IndividualMessage({
     Key? key,
     required this.text,
     required this.type,
-    required this.showOverlay,
-    required this.closeOverLay,
   }) : super(key: key);
 
   final String text;
@@ -40,15 +36,6 @@ class _IndividualMessageState extends State<IndividualMessage> {
       return GestureDetector(
         onLongPress: () {
           showBtSheet();
-          // final ttsProvider = context.read<TextToSpeechProvider>();
-          // if (ttsProvider.isSpeaking) {
-          //   ttsProvider.stopSpeaking();
-          // } else {
-          //   ttsProvider.speak(
-          //     text: widget.text,
-          //     setOnSpeakingCompletion: () {},
-          //   );
-          // }
         },
         child: RawIndividualMessageWidget(text: widget.text),
       );
@@ -74,25 +61,22 @@ class _IndividualMessageState extends State<IndividualMessage> {
 
                         await ttsProvider.speak(
                           text: widget.text,
-                          setOnSpeakingCompletion: widget.closeOverLay,
                         );
-                        widget.showOverlay();
-
-                        // }
                       },
                 child: const Text('Play with voice'),
               ),
               ElevatedButton(
                 onPressed: () async {
                   Navigator.pop(context);
-                  Clipboard.setData(ClipboardData(text: widget.text))
-                      .then((value) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Copied to your clipboard !'),
-                      ),
-                    );
-                  });
+                  Clipboard.setData(ClipboardData(text: widget.text)).then(
+                    (value) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Copied to your clipboard !'),
+                        ),
+                      );
+                    },
+                  );
                 },
                 child: const Text('Copy Message'),
               ),

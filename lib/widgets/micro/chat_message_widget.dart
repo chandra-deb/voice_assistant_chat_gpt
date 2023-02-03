@@ -6,14 +6,11 @@ import '../../models/chat_message_model.dart';
 import 'individual_message_widget.dart';
 
 class ChatMessageWidget extends StatelessWidget {
-  final void Function() showOverlay;
-  final void Function() closeOverLay;
-  const ChatMessageWidget(
-      {super.key,
-      required this.text,
-      required this.chatMessageType,
-      required this.showOverlay,
-      required this.closeOverLay});
+  const ChatMessageWidget({
+    super.key,
+    required this.text,
+    required this.chatMessageType,
+  });
 
   final String text;
   final ChatMessageType chatMessageType;
@@ -54,8 +51,6 @@ class ChatMessageWidget extends StatelessWidget {
                 IndividualMessage(
                   text: text,
                   type: chatMessageType,
-                  showOverlay: showOverlay,
-                  closeOverLay: closeOverLay,
                 ),
               ],
             ),
