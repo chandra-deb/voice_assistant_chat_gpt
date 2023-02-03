@@ -92,9 +92,7 @@ class _HomePageState extends State<HomePage> {
                       Expanded(
                         child: Container(
                           color: Colors.red,
-                          child: ChatMessageListViewWidget(
-                            scrollController: _scrollController,
-                          ),
+                          child: ChatMessageListViewWidget(),
                         ),
                       ),
                       InputBarWidget(addMessage: messageAdder),

@@ -4,21 +4,26 @@ import 'package:provider/provider.dart';
 import 'package:voice_chat_gpt/providers/messages_list_provider.dart';
 
 import '../micro/chat_message_widget.dart';
+import 'speaking_indicator_widget.dart';
 
 class ChatMessageListViewWidget extends StatelessWidget {
-  final ScrollController scrollController;
-  final void Function() showOverlay;
-  final void Function() closeOverLay;
+  final ScrollController scrollController = ScrollController();
 
-  const ChatMessageListViewWidget({
+  ChatMessageListViewWidget({
     Key? key,
-    required this.scrollController,
-    required this.showOverlay,
-    required this.closeOverLay,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) {
+        if (scrollController.hasClients) {
+          scrollController.animateTo(scrollController.position.maxScrollExtent,
+              duration: const Duration(milliseconds: 500),
+              curve: Curves.fastOutSlowIn);
+        }
+      },
+    );
     final messages = context.watch<MessagesListProvider>().messages;
     return Column(
       children: [
@@ -31,12 +36,11 @@ class ChatMessageListViewWidget extends StatelessWidget {
               return ChatMessageWidget(
                 text: message.text,
                 chatMessageType: message.chatMessageType,
-                showOverlay: showOverlay,
-                closeOverLay: closeOverLay,
               );
             },
           ),
         ),
+        const SpeakingIndicatorWidget()
       ],
     );
   }
