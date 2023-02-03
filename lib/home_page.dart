@@ -113,24 +113,31 @@ class _HomePageState extends State<HomePage> {
         ),
         backgroundColor: backgroundColor,
         body: SafeArea(
-          child: Container(
-            padding: const EdgeInsets.all(15),
-            child: Column(
-              children: [
-                Expanded(
-                  child: Container(
-                    color: Colors.red,
-                    child: ChatMessageListViewWidget(
-                      scrollController: _scrollController,
-                      showOverlay: showOverlay,
-                      closeOverLay: closeOverLay,
-                    ),
+          child: LayoutBuilder(builder: (context, constraint) {
+            return SingleChildScrollView(
+              child: ConstrainedBox(
+                constraints: constraint,
+                child: Container(
+                  padding: const EdgeInsets.all(15),
+                  child: Column(
+                    children: [
+                      Expanded(
+                        child: Container(
+                          color: Colors.red,
+                          child: ChatMessageListViewWidget(
+                            scrollController: _scrollController,
+                            showOverlay: showOverlay,
+                            closeOverLay: closeOverLay,
+                          ),
+                        ),
+                      ),
+                      InputBarWidget(addMessage: messageAdder),
+                    ],
                   ),
                 ),
-                InputBarWidget(addMessage: messageAdder),
-              ],
-            ),
-          ),
+              ),
+            );
+          }),
         ),
       ),
     );
