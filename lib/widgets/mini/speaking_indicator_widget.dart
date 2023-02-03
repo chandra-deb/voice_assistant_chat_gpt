@@ -1,5 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
+import 'package:loading_indicator/loading_indicator.dart';
 
 class SpeakingIndicatorWidget extends StatelessWidget {
   final void Function() onClose;
@@ -17,10 +18,9 @@ class SpeakingIndicatorWidget extends StatelessWidget {
         height: 50,
         child: Row(
           children: [
-            Expanded(
-              child: Container(
-                color: Colors.black,
-                child: const Text('Speaking'),
+            const Expanded(
+              child: LoadingIndicator(
+                indicatorType: Indicator.lineScaleParty,
               ),
             ),
             IconButton(
