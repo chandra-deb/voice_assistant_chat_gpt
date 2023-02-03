@@ -16,16 +16,22 @@ class ChatMessageListViewWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final messages = context.watch<MessagesListProvider>().messages;
-    return ListView.builder(
-      controller: scrollController,
-      itemCount: messages.length,
-      itemBuilder: (context, index) {
-        var message = messages[index];
-        return ChatMessageWidget(
-          text: message.text,
-          chatMessageType: message.chatMessageType,
-        );
-      },
+    return Column(
+      children: [
+        Expanded(
+          child: ListView.builder(
+            controller: scrollController,
+            itemCount: messages.length,
+            itemBuilder: (context, index) {
+              var message = messages[index];
+              return ChatMessageWidget(
+                text: message.text,
+                chatMessageType: message.chatMessageType,
+              );
+            },
+          ),
+        ),
+      ],
     );
   }
 }
