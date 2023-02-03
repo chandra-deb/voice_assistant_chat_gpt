@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:provider/provider.dart';
 
 import '../../constants/constants.dart';
 import '../../models/chat_message_model.dart';
-import '../../providers/text_to_speech_provider.dart';
+import 'individual_message_widget.dart';
 
 class ChatMessageWidget extends StatelessWidget {
+  final void Function() showOverlay;
+  final void Function() closeOverLay;
   const ChatMessageWidget(
-      {super.key, required this.text, required this.chatMessageType});
+      {super.key,
+      required this.text,
+      required this.chatMessageType,
+      required this.showOverlay,
+      required this.closeOverLay});
 
   final String text;
   final ChatMessageType chatMessageType;
@@ -46,71 +51,17 @@ class ChatMessageWidget extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                IndividualMessage(text: text, type: chatMessageType),
+                IndividualMessage(
+                  text: text,
+                  type: chatMessageType,
+                  showOverlay: showOverlay,
+                  closeOverLay: closeOverLay,
+                ),
               ],
             ),
           ),
         ],
       ),
     ).animate().fade().slide(duration: const Duration(milliseconds: 100));
-  }
-}
-
-class IndividualMessage extends StatelessWidget {
-  const IndividualMessage({
-    Key? key,
-    required this.text,
-    required this.type,
-  }) : super(key: key);
-
-  final String text;
-  final ChatMessageType type;
-
-  @override
-  Widget build(BuildContext context) {
-    if (type == ChatMessageType.bot) {
-      return GestureDetector(
-        onLongPress: () {
-          final ttsProvider = context.read<TextToSpeechProvider>();
-          if (ttsProvider.isSpeaking) {
-            ttsProvider.stopSpeaking();
-          } else {
-            ttsProvider.speak(
-              text: text,
-              setOnSpeakingCompletion: () {},
-            );
-          }
-        },
-        child: RawIndividualMessage(text: text),
-      );
-    } else {
-      return RawIndividualMessage(text: text);
-    }
-  }
-}
-
-class RawIndividualMessage extends StatelessWidget {
-  const RawIndividualMessage({
-    Key? key,
-    required this.text,
-  }) : super(key: key);
-
-  final String text;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(8.0),
-      decoration: const BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(8.0)),
-      ),
-      child: Text(
-        text,
-        style: Theme.of(context)
-            .textTheme
-            .bodyLarge
-            ?.copyWith(color: Colors.white),
-      ),
-    );
   }
 }

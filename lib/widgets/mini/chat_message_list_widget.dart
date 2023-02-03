@@ -7,10 +7,14 @@ import '../micro/chat_message_widget.dart';
 
 class ChatMessageListViewWidget extends StatelessWidget {
   final ScrollController scrollController;
+  final void Function() showOverlay;
+  final void Function() closeOverLay;
 
   const ChatMessageListViewWidget({
     Key? key,
     required this.scrollController,
+    required this.showOverlay,
+    required this.closeOverLay,
   }) : super(key: key);
 
   @override
@@ -27,6 +31,8 @@ class ChatMessageListViewWidget extends StatelessWidget {
               return ChatMessageWidget(
                 text: message.text,
                 chatMessageType: message.chatMessageType,
+                showOverlay: showOverlay,
+                closeOverLay: closeOverLay,
               );
             },
           ),

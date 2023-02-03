@@ -99,34 +99,37 @@ class _HomePageState extends State<HomePage> {
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       onTapDown: (details) => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
-      appBar: AppBar(
-        toolbarHeight: 100,
-        title: const Padding(
-          padding: EdgeInsets.all(8.0),
-          child: Text(
-            'ChatGPT',
-            maxLines: 2,
-            textAlign: TextAlign.center,
+        appBar: AppBar(
+          toolbarHeight: 100,
+          title: const Padding(
+            padding: EdgeInsets.all(8.0),
+            child: Text(
+              'ChatGPT',
+              maxLines: 2,
+              textAlign: TextAlign.center,
+            ),
           ),
+          backgroundColor: botBackgroundColor,
         ),
-        backgroundColor: botBackgroundColor,
-      ),
-      backgroundColor: backgroundColor,
-      body: SafeArea(
-        child: Container(
-          padding: const EdgeInsets.all(15),
-          child: Column(
-            children: [
-              Expanded(
-                child: Container(
-                  color: Colors.red,
-                  child: ChatMessageListViewWidget(
-                    scrollController: _scrollController,
+        backgroundColor: backgroundColor,
+        body: SafeArea(
+          child: Container(
+            padding: const EdgeInsets.all(15),
+            child: Column(
+              children: [
+                Expanded(
+                  child: Container(
+                    color: Colors.red,
+                    child: ChatMessageListViewWidget(
+                      scrollController: _scrollController,
+                      showOverlay: showOverlay,
+                      closeOverLay: closeOverLay,
+                    ),
                   ),
                 ),
-              ),
-              InputBarWidget(addMessage: messageAdder),
-            ],
+                InputBarWidget(addMessage: messageAdder),
+              ],
+            ),
           ),
         ),
       ),
