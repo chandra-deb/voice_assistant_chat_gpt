@@ -17,7 +17,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final _scrollController = ScrollController();
   late final MessagesListProvider messagesListProvider;
   @override
   void initState() {
@@ -32,8 +31,6 @@ class _HomePageState extends State<HomePage> {
         chatMessageType: ChatMessageType.user,
       ),
     );
-
-    Future.delayed(const Duration(milliseconds: 50)).then((_) => _scrollDown());
 
     try {
       await context.read<ConversationProvider>().generateResponse(prompt: text);
@@ -53,8 +50,6 @@ class _HomePageState extends State<HomePage> {
           chatMessageType: ChatMessageType.bot,
         ),
       );
-      Future.delayed(const Duration(milliseconds: 50))
-          .then((_) => _scrollDown());
     } catch (e) {
       final snackBar = SnackBar(content: Text(e.toString()));
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
@@ -81,37 +76,21 @@ class _HomePageState extends State<HomePage> {
         ),
         backgroundColor: backgroundColor,
         body: SafeArea(
-          child: LayoutBuilder(builder: (context, constraint) {
-            return SingleChildScrollView(
-              child: ConstrainedBox(
-                constraints: constraint,
+            child: Container(
+          padding: const EdgeInsets.all(15),
+          child: Column(
+            children: [
+              Expanded(
                 child: Container(
-                  padding: const EdgeInsets.all(15),
-                  child: Column(
-                    children: [
-                      Expanded(
-                        child: Container(
-                          color: Colors.red,
-                          child: ChatMessageListViewWidget(),
-                        ),
-                      ),
-                      InputBarWidget(addMessage: messageAdder),
-                    ],
-                  ),
+                  color: Colors.red,
+                  child: ChatMessageListViewWidget(),
                 ),
               ),
-            );
-          }),
-        ),
+              InputBarWidget(addMessage: messageAdder),
+            ],
+          ),
+        )),
       ),
-    );
-  }
-
-  void _scrollDown() {
-    _scrollController.animateTo(
-      _scrollController.position.maxScrollExtent,
-      duration: const Duration(milliseconds: 300),
-      curve: Curves.easeOut,
     );
   }
 }
