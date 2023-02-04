@@ -20,19 +20,26 @@ class ChatGptService {
   }) async {
     var uri =
         Uri.https("api.openai.com", "/v1/engines/text-davinci-003/completions");
-    var request = await http.post(uri,
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": "Bearer $_apiKey"
-        },
-        body: json.encode({
-          "prompt": message,
-          "temperature": 0.9,
-          "max_tokens": 1000,
-          "top_p": 1,
-          "frequency_penalty": 0,
-          "presence_penalty": 0.6,
-        }));
+    var request = await http
+        .post(uri,
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": "Bearer $_apiKey"
+            },
+            body: json.encode({
+              "prompt": message,
+              "temperature": 0.9,
+              "max_tokens": 1000,
+              "top_p": 1,
+              "frequency_penalty": 0,
+              "presence_penalty": 0.6,
+            }))
+        .timeout(
+      const Duration(seconds: 25),
+      onTimeout: () {
+        throw Exception('Your internet is too slow to generate response!');
+      },
+    );
     if (request.statusCode != 200) {
       throw Exception("Failed to generate response");
     }
