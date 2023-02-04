@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
@@ -5,11 +6,15 @@ import '../../models/chat_message_model.dart';
 import 'individual_message_widget.dart';
 
 class ChatMessageWidget extends StatelessWidget {
+  final void Function() showOverlay;
+  final void Function() closeOverLay;
   const ChatMessageWidget({
-    super.key,
+    Key? key,
+    required this.showOverlay,
+    required this.closeOverLay,
     required this.text,
     required this.chatMessageType,
-  });
+  }) : super(key: key);
 
   final String text;
   final ChatMessageType chatMessageType;
@@ -29,6 +34,8 @@ class ChatMessageWidget extends StatelessWidget {
                   : CrossAxisAlignment.end,
               children: <Widget>[
                 IndividualMessage(
+                  showOverlay: showOverlay,
+                  closeOverLay: closeOverLay,
                   text: text,
                   type: chatMessageType,
                 ),

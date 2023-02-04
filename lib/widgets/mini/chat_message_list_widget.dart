@@ -4,13 +4,16 @@ import 'package:provider/provider.dart';
 import 'package:voice_chat_gpt/providers/messages_list_provider.dart';
 
 import '../micro/chat_message_widget.dart';
-import 'speaking_indicator_widget.dart';
 
 class ChatMessageListViewWidget extends StatelessWidget {
   final ScrollController scrollController = ScrollController();
+  final void Function() showOverlay;
+  final void Function() closeOverLay;
 
   ChatMessageListViewWidget({
     Key? key,
+    required this.showOverlay,
+    required this.closeOverLay,
   }) : super(key: key);
 
   void showListViewBottom() {
@@ -38,13 +41,14 @@ class ChatMessageListViewWidget extends StatelessWidget {
             itemBuilder: (context, index) {
               var message = messages[index];
               return ChatMessageWidget(
+                showOverlay: showOverlay,
+                closeOverLay: closeOverLay,
                 text: message.text,
                 chatMessageType: message.chatMessageType,
               );
             },
           ),
         ),
-        const SpeakingIndicatorWidget()
       ],
     );
   }
