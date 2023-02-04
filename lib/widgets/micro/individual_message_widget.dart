@@ -32,8 +32,6 @@ class _IndividualMessageState extends State<IndividualMessage> {
 
   @override
   Widget build(BuildContext context) {
-    bool isUser = widget.type == ChatMessageType.user;
-
     if (widget.type == ChatMessageType.bot) {
       return GestureDetector(
         onLongPress: () {

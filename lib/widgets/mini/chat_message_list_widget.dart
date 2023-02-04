@@ -13,8 +13,7 @@ class ChatMessageListViewWidget extends StatelessWidget {
     Key? key,
   }) : super(key: key);
 
-  @override
-  Widget build(BuildContext context) {
+  void showListViewBottom() {
     WidgetsBinding.instance.addPostFrameCallback(
       (_) {
         if (scrollController.hasClients) {
@@ -24,6 +23,11 @@ class ChatMessageListViewWidget extends StatelessWidget {
         }
       },
     );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    showListViewBottom();
     final messages = context.watch<MessagesListProvider>().messages;
     return Column(
       children: [

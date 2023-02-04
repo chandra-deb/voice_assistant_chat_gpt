@@ -7,7 +7,6 @@ import 'package:provider/provider.dart';
 import '../../providers/text_to_speech_provider.dart';
 
 class SpeakingIndicatorWidget extends StatelessWidget {
-  // final void Function() onClose;
   const SpeakingIndicatorWidget({
     Key? key,
   }) : super(key: key);
