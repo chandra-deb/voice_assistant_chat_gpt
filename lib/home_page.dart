@@ -51,6 +51,15 @@ class _HomePageState extends State<HomePage> {
         ),
       );
     } catch (e) {
+      const fallbackMessage =
+          'I think your internet connection is very slow or turned off. I can not answer anything without stable internet connection.';
+      context.read<TextToSpeechProvider>().speak(text: fallbackMessage);
+      messagesListProvider.addMessage(
+        ChatMessage(
+          text: fallbackMessage,
+          chatMessageType: ChatMessageType.bot,
+        ),
+      );
       final snackBar = SnackBar(content: Text(e.toString()));
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
     }
@@ -77,14 +86,10 @@ class _HomePageState extends State<HomePage> {
         backgroundColor: backgroundColor,
         body: SafeArea(
             child: Container(
-          padding: const EdgeInsets.all(15),
           child: Column(
             children: [
               Expanded(
-                child: Container(
-                  color: Colors.red,
-                  child: ChatMessageListViewWidget(),
-                ),
+                child: ChatMessageListViewWidget(),
               ),
               InputBarWidget(addMessage: messageAdder),
             ],
