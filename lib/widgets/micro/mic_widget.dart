@@ -59,14 +59,21 @@ class _MicWidgetState extends State<MicWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Visibility(
-      // visible: !isLoading,
-      child: Container(
-        // color: botBackgroundColor,
+    return SizedBox(
+      height: 50,
+      width: 60,
+      child: ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.white,
+            enableFeedback: true,
+          ),
+          child: isListening
+              ? const LoadingIndicator(
+                  indicatorType: Indicator.lineScalePulseOutRapid,
+                  colors: [Colors.red, Colors.blue, Colors.teal],
+                )
+              : const Icon(
         color: Colors.green,
-        child: IconButton(
-            iconSize: 40,
-            icon: Icon(
               Icons.mic,
               color: isListening
                   ? Colors.red
