@@ -16,22 +16,35 @@ class SpeakingIndicatorWidget extends StatelessWidget {
     return Visibility(
       visible: context.watch<TextToSpeechProvider>().isSpeaking,
       child: Container(
-        color: Colors.amber,
-        width: MediaQuery.of(context).size.width / 2.5,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(20),
+        ),
+        width: MediaQuery.of(context).size.width / 3,
         height: 50,
         child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Expanded(
-              child: LoadingIndicator(
-                indicatorType: Indicator.lineScalePulseOutRapid,
+              child: Padding(
+                padding: EdgeInsets.symmetric(vertical: 8, horizontal: 5),
+                child: LoadingIndicator(
+                  indicatorType: Indicator.lineScalePulseOutRapid,
+                ),
               ),
             ),
-            IconButton(
-              onPressed: (() {
-                context.read<TextToSpeechProvider>().stopSpeaking();
-              }),
-              icon: const Icon(
-                Icons.close,
+            Container(
+              color: Colors.black87,
+              width: 2,
+            ),
+            Center(
+              child: IconButton(
+                onPressed: (() {
+                  context.read<TextToSpeechProvider>().stopSpeaking();
+                }),
+                icon: const Icon(
+                  Icons.close,
+                ),
               ),
             )
           ],
