@@ -32,15 +32,42 @@ class _IndividualMessageState extends State<IndividualMessage> {
 
   @override
   Widget build(BuildContext context) {
+    bool isUser = widget.type == ChatMessageType.user;
+
     if (widget.type == ChatMessageType.bot) {
       return GestureDetector(
         onLongPress: () {
           showBtSheet();
         },
-        child: RawIndividualMessageWidget(text: widget.text),
+        child: Container(
+          decoration: const BoxDecoration(
+            color: Colors.pink,
+            borderRadius: BorderRadius.only(
+              topRight: Radius.circular(30.0),
+              bottomLeft: Radius.circular(30.0),
+              bottomRight: Radius.circular(30.0),
+            ),
+          ),
+          padding: const EdgeInsets.all(2),
+          child: RawIndividualMessageWidget(text: widget.text),
+        ),
       );
     } else {
-      return RawIndividualMessageWidget(text: widget.text);
+      return GestureDetector(
+        onLongPress: showBtSheet,
+        child: Container(
+          padding: const EdgeInsets.all(2),
+          decoration: const BoxDecoration(
+            color: Colors.blue,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(30.0),
+              bottomLeft: Radius.circular(30.0),
+              bottomRight: Radius.circular(30.0),
+            ),
+          ),
+          child: RawIndividualMessageWidget(text: widget.text),
+        ),
+      );
     }
   }
 

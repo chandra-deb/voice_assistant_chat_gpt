@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
-import '../../constants/constants.dart';
 import '../../models/chat_message_model.dart';
 import 'individual_message_widget.dart';
 
@@ -20,33 +19,14 @@ class ChatMessageWidget extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 10.0),
       padding: const EdgeInsets.all(16),
-      color: chatMessageType == ChatMessageType.bot
-          ? botBackgroundColor
-          : backgroundColor,
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          chatMessageType == ChatMessageType.bot
-              ? Container(
-                  margin: const EdgeInsets.only(right: 16.0),
-                  child: CircleAvatar(
-                    backgroundColor: const Color.fromRGBO(16, 163, 127, 1),
-                    child: Image.asset(
-                      'assets/bot.jpg',
-                    ),
-                  ),
-                )
-              : Container(
-                  margin: const EdgeInsets.only(right: 16.0),
-                  child: const CircleAvatar(
-                    child: Icon(
-                      Icons.person,
-                    ),
-                  ),
-                ),
           Expanded(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: chatMessageType == ChatMessageType.bot
+                  ? CrossAxisAlignment.start
+                  : CrossAxisAlignment.end,
               children: <Widget>[
                 IndividualMessage(
                   text: text,
@@ -57,6 +37,8 @@ class ChatMessageWidget extends StatelessWidget {
           ),
         ],
       ),
-    ).animate().fade().slide(duration: const Duration(milliseconds: 100));
+    ).animate().fade().slide(
+          duration: const Duration(milliseconds: 100),
+        );
   }
 }
