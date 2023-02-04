@@ -21,7 +21,7 @@ class _InputBarWidgetState extends State<InputBarWidget> {
   late final TextEditingController _textController;
   late final FocusNode _focusNode;
   bool _showMic = true;
-  bool _isLoadingResponse = false;
+  bool _showLoadingResponse = false;
 
   @override
   void initState() {
@@ -32,7 +32,6 @@ class _InputBarWidgetState extends State<InputBarWidget> {
   }
 
   void listenTextChanges() {
-    print(_textController.text);
     if (_textController.text.isEmpty) {
       setState(() {
         _showMic = true;
@@ -50,7 +49,7 @@ class _InputBarWidgetState extends State<InputBarWidget> {
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
         TextInputWidget(textController: _textController, focusNode: _focusNode),
-        _isLoadingResponse
+        _showLoadingResponse
             ? const ResponseLoadingWidget()
             : _showMic
                 ? MicWidget(
@@ -75,11 +74,11 @@ class _InputBarWidgetState extends State<InputBarWidget> {
 
   Future<void> setResponseLoading(String text) async {
     setState(() {
-      _isLoadingResponse = true;
+      _showLoadingResponse = true;
     });
     await widget.addMessage(text);
     setState(() {
-      _isLoadingResponse = false;
+      _showLoadingResponse = false;
     });
   }
 }
