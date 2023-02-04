@@ -1,5 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
+import 'package:loading_indicator/loading_indicator.dart';
 import 'package:speech_to_text/speech_recognition_result.dart';
 import 'package:speech_to_text/speech_to_text.dart';
 
@@ -26,9 +27,6 @@ class _MicWidgetState extends State<MicWidget> {
   }
 
   Future<void> _startListening() async {
-    setState(() {
-      isListening = true;
-    });
     await _speechToText.listen(
       onResult: _onSpeechResult,
       partialResults: false,
@@ -37,23 +35,28 @@ class _MicWidgetState extends State<MicWidget> {
   }
 
   void _onSpeechResult(SpeechRecognitionResult result) async {
-    setState(() {
-      isListening = false;
-    });
     _lastWords = result.recognizedWords;
     widget.addMessage(_lastWords);
   }
 
   Future<void> _stopListening() async {
-    setState(() {
-      isListening = false;
-    });
     await _speechToText.stop();
   }
 
   @override
   void initState() {
     _initSpeech();
+    _speechToText.statusListener = (status) {
+      if (status == 'listening') {
+        setState(() {
+          isListening = true;
+        });
+      } else if (status == 'notListening') {
+        setState(() {
+          isListening = false;
+        });
+      }
+    };
     super.initState();
   }
 
@@ -73,21 +76,17 @@ class _MicWidgetState extends State<MicWidget> {
                   colors: [Colors.red, Colors.blue, Colors.teal],
                 )
               : const Icon(
-        color: Colors.green,
-              Icons.mic,
-              color: isListening
-                  ? Colors.red
-                  : const Color.fromRGBO(142, 142, 160, 1),
-            ),
-            onPressed: () async {
-              // If not yet listening for speech start, otherwise stop
-              if (!isListening) {
-                await _startListening();
-              } else {
-                await _stopListening();
-              }
-            }),
-      ),
+                  color: Colors.green,
+                  Icons.mic,
+                ),
+          onPressed: () async {
+            // If not yet listening for speech start, otherwise stop
+            if (!isListening) {
+              await _startListening();
+            } else {
+              await _stopListening();
+            }
+          }),
     );
   }
 }
