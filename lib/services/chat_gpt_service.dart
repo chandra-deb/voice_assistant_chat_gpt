@@ -35,7 +35,7 @@ class ChatGptService {
               "presence_penalty": 0.6,
             }))
         .timeout(
-      const Duration(seconds: 25),
+      const Duration(seconds: 45),
       onTimeout: () {
         throw Exception('Your internet is too slow to generate response!');
       },
