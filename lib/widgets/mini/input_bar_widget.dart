@@ -46,7 +46,7 @@ class _InputBarWidgetState extends State<InputBarWidget> {
   @override
   Widget build(BuildContext context) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         TextInputWidget(textController: _textController, focusNode: _focusNode),
         _showLoadingResponse
@@ -55,17 +55,28 @@ class _InputBarWidgetState extends State<InputBarWidget> {
                 ? MicWidget(
                     addMessage: setResponseLoading,
                   )
-                : IconButton(
-                    onPressed: () async {
-                      final text = _textController.text.trim();
-                      _textController.clear();
-                      _focusNode.unfocus();
-                      await setResponseLoading(text);
-                    },
-                    icon: const Icon(
-                      Icons.send,
-                      color: Colors.blueAccent,
-                      size: 40,
+                : SizedBox(
+                    height: 50,
+                    width: 70,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(18),
+                        ),
+                        backgroundColor: Colors.white,
+                        padding: const EdgeInsets.all(5),
+                      ),
+                      onPressed: () async {
+                        final text = _textController.text.trim();
+                        _textController.clear();
+                        _focusNode.unfocus();
+                        await setResponseLoading(text);
+                      },
+                      child: const Icon(
+                        color: Colors.pink,
+                        Icons.send,
+                        size: 40,
+                      ),
                     ),
                   ),
       ],

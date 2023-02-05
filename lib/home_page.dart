@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:provider/provider.dart';
 
-import 'constants/constants.dart';
 import 'models/chat_message_model.dart';
 import 'providers/conversation_provider.dart';
 import 'providers/messages_list_provider.dart';
@@ -115,11 +114,14 @@ class _HomePageState extends State<HomePage> {
               'Friendly',
               maxLines: 2,
               textAlign: TextAlign.center,
+              style: TextStyle(color: Colors.pink, fontSize: 50),
             ),
           ),
-          backgroundColor: botBackgroundColor,
+          // backgroundColor: botBackgroundColor,
+          elevation: 0,
+          backgroundColor: Colors.white,
         ),
-        backgroundColor: backgroundColor,
+        // backgroundColor: backgroundColor,
         body: SafeArea(
             child: Container(
           // padding: const EdgeInsets.all(15),

@@ -8,14 +8,21 @@ class ResponseLoadingWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 10.0),
-      padding: const EdgeInsets.all(16),
-      child: const SizedBox(
-        width: 45,
-        child: LoadingIndicator(
-          indicatorType: Indicator.ballPulse,
-          colors: [Colors.white, Colors.purple, Colors.blueAccent],
+    return SizedBox(
+      height: 50,
+      width: 70,
+      child: ElevatedButton(
+        onPressed: () {},
+        style: ElevatedButton.styleFrom(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(18),
+          ),
+          backgroundColor: Colors.white,
+          padding: const EdgeInsets.all(5),
+        ),
+        child: const LoadingIndicator(
+          indicatorType: Indicator.ballSpinFadeLoader,
+          colors: [Colors.red, Colors.purple, Colors.blueAccent],
           strokeWidth: 2,
         ),
       ),

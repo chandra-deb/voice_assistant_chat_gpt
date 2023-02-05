@@ -64,20 +64,24 @@ class _MicWidgetState extends State<MicWidget> {
   Widget build(BuildContext context) {
     return SizedBox(
       height: 50,
-      width: 60,
+      width: 70,
       child: ElevatedButton(
           style: ElevatedButton.styleFrom(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(18),
+            ),
             backgroundColor: Colors.white,
-            enableFeedback: true,
+            padding: const EdgeInsets.all(5),
           ),
           child: isListening
               ? const LoadingIndicator(
                   indicatorType: Indicator.lineScalePulseOutRapid,
-                  colors: [Colors.red, Colors.blue, Colors.teal],
+                  colors: [Colors.blue, Colors.pink, Colors.red],
                 )
               : const Icon(
-                  color: Colors.green,
+                  color: Colors.pink,
                   Icons.mic,
+                  size: 40,
                 ),
           onPressed: () async {
             // If not yet listening for speech start, otherwise stop

@@ -1,4 +1,5 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+
 import 'package:flutter/material.dart';
 
 class TextInputWidget extends StatelessWidget {
@@ -13,17 +14,20 @@ class TextInputWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.pink,
+      margin: const EdgeInsets.symmetric(vertical: 10),
+      height: 50,
+      decoration: BoxDecoration(
+        color: Colors.grey.shade200,
+        border: Border.all(width: 0.1, color: Colors.grey),
+        borderRadius: const BorderRadius.all(Radius.circular(20)),
+      ),
       width: MediaQuery.of(context).size.width - 130,
       child: TextField(
+        cursorColor: Colors.grey.shade500,
         decoration: const InputDecoration(
-          label: Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Text(
-              'Ask me anything!',
-              style: TextStyle(fontSize: 20),
-            ),
-          ),
+          hintText: 'Ask Me Anything',
+          contentPadding: EdgeInsets.symmetric(horizontal: 20),
+          border: InputBorder.none,
         ),
         focusNode: focusNode,
         controller: textController,
