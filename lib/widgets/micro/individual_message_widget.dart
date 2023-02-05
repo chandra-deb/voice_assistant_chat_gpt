@@ -9,12 +9,8 @@ import '../../providers/text_to_speech_provider.dart';
 import 'raw_individual_message_widget.dart';
 
 class IndividualMessage extends StatefulWidget {
-  final void Function() showOverlay;
-  final void Function() closeOverLay;
   const IndividualMessage({
     Key? key,
-    required this.showOverlay,
-    required this.closeOverLay,
     required this.text,
     required this.type,
   }) : super(key: key);
@@ -91,9 +87,7 @@ class _IndividualMessageState extends State<IndividualMessage> {
 
                         await ttsProvider.speak(
                           text: widget.text,
-                          setOnSpeakingCompletion: widget.closeOverLay,
                         );
-                        widget.showOverlay();
                       },
                 child: const Text('Play with voice'),
               ),

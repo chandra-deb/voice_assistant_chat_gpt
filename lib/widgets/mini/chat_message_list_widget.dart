@@ -7,13 +7,9 @@ import '../micro/chat_message_widget.dart';
 
 class ChatMessageListViewWidget extends StatelessWidget {
   final ScrollController scrollController = ScrollController();
-  final void Function() showOverlay;
-  final void Function() closeOverLay;
 
   ChatMessageListViewWidget({
     Key? key,
-    required this.showOverlay,
-    required this.closeOverLay,
   }) : super(key: key);
 
   void showListViewBottom() {
@@ -41,8 +37,6 @@ class ChatMessageListViewWidget extends StatelessWidget {
             itemBuilder: (context, index) {
               var message = messages[index];
               return ChatMessageWidget(
-                showOverlay: showOverlay,
-                closeOverLay: closeOverLay,
                 text: message.text,
                 chatMessageType: message.chatMessageType,
               );
