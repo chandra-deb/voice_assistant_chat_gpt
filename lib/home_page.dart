@@ -8,6 +8,7 @@ import 'providers/messages_list_provider.dart';
 import 'providers/text_to_speech_provider.dart';
 import 'widgets/mini/chat_message_list_widget.dart';
 import 'widgets/mini/input_bar_widget.dart';
+import 'widgets/mini/sp_indicator.dart';
 import 'widgets/mini/speaking_indicator_widget.dart';
 
 class HomePage extends StatefulWidget {
@@ -110,12 +111,7 @@ class _HomePageState extends State<HomePage> {
           toolbarHeight: 100,
           title: const Padding(
             padding: EdgeInsets.all(8.0),
-            child: Text(
-              'Friendly',
-              maxLines: 2,
-              textAlign: TextAlign.center,
-              style: TextStyle(color: Colors.pink, fontSize: 50),
-            ),
+            child: SPIndicatorWidget(),
           ),
           // backgroundColor: botBackgroundColor,
           elevation: 0,
@@ -136,7 +132,30 @@ class _HomePageState extends State<HomePage> {
                 ),
                 // ),
               ),
-              InputBarWidget(addMessage: messageAdder),
+              Consumer<TextToSpeechProvider>(
+                builder: (context, ttsProvider, child) {
+                  return AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 400),
+                    transitionBuilder:
+                        (Widget child, Animation<double> animation) {
+                      return ScaleTransition(scale: animation, child: child);
+                    },
+                    child: ttsProvider.isSpeaking
+                        ? GestureDetector(
+                            onTap: () {
+                              ttsProvider.stopSpeaking();
+                            },
+                            child: Container(
+                              color: Colors.pink,
+                              height: 50,
+                              width: 70,
+                              child: const Icon(Icons.close),
+                            ),
+                          )
+                        : InputBarWidget(addMessage: messageAdder),
+                  );
+                },
+              ),
             ],
           ),
         )),
