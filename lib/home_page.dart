@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import 'models/chat_message_model.dart';
 import 'providers/conversation_provider.dart';
+import 'providers/input_button_provider.dart';
 import 'providers/messages_provider.dart';
 import 'providers/text_to_speech_provider.dart';
 import 'widgets/mini/bottom_actions_widget.dart';
@@ -17,13 +18,15 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  late final MessagesProvider messagesListProvider;
+  late final MessagesProvider _messagesListProvider;
+  late final InputButtonProvider _inputButtonProvider;
   final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
-    messagesListProvider = context.read<MessagesProvider>();
+    _messagesListProvider = context.read<MessagesProvider>();
+    _inputButtonProvider = context.read<InputButtonProvider>();
 
     WidgetsBinding.instance.addPostFrameCallback(
       (_) {
@@ -46,7 +49,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> messageAdder(String text) async {
-    messagesListProvider.addMessage(
+    _messagesListProvider.addMessage(
       ChatMessage(
         text: text,
         chatMessageType: ChatMessageType.user,
@@ -55,6 +58,7 @@ class _HomePageState extends State<HomePage> {
     Future.delayed(const Duration(milliseconds: 50)).then((_) => _scrollDown());
 
     try {
+      _inputButtonProvider.setShowLoadingResponseTrue();
       await context.read<ConversationProvider>().generateResponse(prompt: text);
       final repliedMessage =
           // ignore: use_build_context_synchronously
@@ -66,12 +70,14 @@ class _HomePageState extends State<HomePage> {
           );
       // ignore: use_build_context_synchronously
 
-      messagesListProvider.addMessage(
+      _messagesListProvider.addMessage(
         ChatMessage(
           text: repliedMessage,
           chatMessageType: ChatMessageType.bot,
         ),
       );
+      _inputButtonProvider.setShowMicTrue();
+
       Future.delayed(const Duration(milliseconds: 50))
           .then((_) => _scrollDown());
     } catch (e) {
@@ -80,7 +86,7 @@ class _HomePageState extends State<HomePage> {
       context.read<TextToSpeechProvider>().speak(
             text: fallbackMessage,
           );
-      messagesListProvider.addMessage(
+      _messagesListProvider.addMessage(
         ChatMessage(
           text: fallbackMessage,
           chatMessageType: ChatMessageType.bot,
@@ -92,6 +98,7 @@ class _HomePageState extends State<HomePage> {
       final snackBar = SnackBar(content: Text(e.toString()));
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
     }
+    _inputButtonProvider.setShowMicTrue();
   }
 
   @override
