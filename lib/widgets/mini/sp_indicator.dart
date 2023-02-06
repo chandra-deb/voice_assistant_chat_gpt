@@ -20,62 +20,59 @@ class SpeakingIndicatorWidget extends StatelessWidget {
         child: ttsProvider.isSpeaking
             ? Container(
                 decoration: BoxDecoration(
-                  color: Colors.white,
                   borderRadius: BorderRadius.circular(20),
                 ),
                 // width: MediaQuery.of(context).size.width / 3,
                 height: 50,
-                child: Expanded(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
-                      LoadingIndicator(
-                        colors: [
-                          // Colors.pink.shade300,
-                          Colors.pink,
-                          // Colors.pink.shade300
-                        ],
-                        indicatorType: Indicator.lineScalePulseOutRapid,
-                      ),
-                      SizedBox(
-                        width: 3,
-                      ),
-                      LoadingIndicator(
-                        colors: [
-                          // Colors.pink.shade300,
-                          Colors.pink,
-                          // Colors.pink.shade300
-                        ],
-                        indicatorType: Indicator.lineScalePulseOutRapid,
-                      ),
-                      SizedBox(
-                        width: 3,
-                      ),
-                      LoadingIndicator(
-                        colors: [
-                          // Colors.pink.shade300,
-                          Colors.pink,
-                          // Colors.pink.shade300
-                        ],
-                        indicatorType: Indicator.lineScalePulseOutRapid,
-                      ),
-                      SizedBox(
-                        width: 3,
-                      ),
-                      LoadingIndicator(
-                        colors: [
-                          // Colors.pink.shade300,
-                          Colors.pink,
-                          // Colors.pink.shade300
-                        ],
-                        indicatorType: Indicator.lineScalePulseOutRapid,
-                      ),
-                    ],
-                  ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const [
+                    LoadingIndicator(
+                      colors: [
+                        // Colors.pink.shade300,
+                        Colors.pink,
+                        // Colors.pink.shade300
+                      ],
+                      indicatorType: Indicator.lineScalePulseOutRapid,
+                    ),
+                    SizedBox(
+                      width: 3,
+                    ),
+                    LoadingIndicator(
+                      colors: [
+                        // Colors.pink.shade300,
+                        Colors.pink,
+                        // Colors.pink.shade300
+                      ],
+                      indicatorType: Indicator.lineScalePulseOutRapid,
+                    ),
+                    SizedBox(
+                      width: 3,
+                    ),
+                    LoadingIndicator(
+                      colors: [
+                        // Colors.pink.shade300,
+                        Colors.pink,
+                        // Colors.pink.shade300
+                      ],
+                      indicatorType: Indicator.lineScalePulseOutRapid,
+                    ),
+                    SizedBox(
+                      width: 3,
+                    ),
+                    LoadingIndicator(
+                      colors: [
+                        // Colors.pink.shade300,
+                        Colors.pink,
+                        // Colors.pink.shade300
+                      ],
+                      indicatorType: Indicator.lineScalePulseOutRapid,
+                    ),
+                  ],
                 ),
               )
             : const Text(
-                'Friendly',
+                'Friendly!',
                 maxLines: 2,
                 textAlign: TextAlign.center,
                 style: TextStyle(color: Colors.pink, fontSize: 50),
