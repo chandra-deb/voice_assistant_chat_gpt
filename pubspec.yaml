@@ -41,7 +41,7 @@ dependencies:
   provider: ^6.0.5
   share_plus: ^6.3.0
   speech_to_text: ^6.1.1
-  uuid: null
+  uuid: ^3.0.7
 
 dev_dependencies:
   flutter_lints: ^2.0.0
