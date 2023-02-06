@@ -7,18 +7,17 @@ import 'individual_message_widget.dart';
 class ChatMessageWidget extends StatelessWidget {
   const ChatMessageWidget({
     Key? key,
-    required this.text,
-    required this.chatMessageType,
+    required this.chatMessage,
   }) : super(key: key);
 
-  final String text;
-  final ChatMessageType chatMessageType;
+  final ChatMessage chatMessage;
 
   @override
   Widget build(BuildContext context) {
+    final chatMessageType = chatMessage.chatMessageType;
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 10.0),
-      padding: const EdgeInsets.all(16),
+      margin: const EdgeInsets.symmetric(vertical: 2.0),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
@@ -29,8 +28,7 @@ class ChatMessageWidget extends StatelessWidget {
                   : CrossAxisAlignment.end,
               children: <Widget>[
                 IndividualMessage(
-                  text: text,
-                  type: chatMessageType,
+                  chatMessage: chatMessage,
                 ),
               ],
             ),

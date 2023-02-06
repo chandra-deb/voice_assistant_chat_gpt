@@ -31,8 +31,7 @@ class ChatMessageListViewWidget extends StatelessWidget {
               context.read<MessagesProvider>().setSelectedMessage(message);
             },
             child: ChatMessageWidget(
-              text: message.text,
-              chatMessageType: message.chatMessageType,
+              chatMessage: message,
             ),
           );
         },
