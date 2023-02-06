@@ -18,11 +18,31 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   late final MessagesProvider messagesListProvider;
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
     messagesListProvider = context.read<MessagesProvider>();
+
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) {
+        if (_scrollController.hasClients) {
+          _scrollController.animateTo(
+              _scrollController.position.maxScrollExtent,
+              duration: const Duration(milliseconds: 500),
+              curve: Curves.fastOutSlowIn);
+        }
+      },
+    );
+  }
+
+  void _scrollDown() {
+    _scrollController.animateTo(
+      _scrollController.position.maxScrollExtent,
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeOut,
+    );
   }
 
   Future<void> messageAdder(String text) async {
@@ -32,6 +52,7 @@ class _HomePageState extends State<HomePage> {
         chatMessageType: ChatMessageType.user,
       ),
     );
+    Future.delayed(const Duration(milliseconds: 50)).then((_) => _scrollDown());
 
     try {
       await context.read<ConversationProvider>().generateResponse(prompt: text);
@@ -51,6 +72,8 @@ class _HomePageState extends State<HomePage> {
           chatMessageType: ChatMessageType.bot,
         ),
       );
+      Future.delayed(const Duration(milliseconds: 50))
+          .then((_) => _scrollDown());
     } catch (e) {
       const fallbackMessage =
           'I think your internet connection is very slow or turned off. I can not answer anything without stable internet connection.';
@@ -63,6 +86,9 @@ class _HomePageState extends State<HomePage> {
           chatMessageType: ChatMessageType.bot,
         ),
       );
+      Future.delayed(const Duration(milliseconds: 50))
+          .then((_) => _scrollDown());
+
       final snackBar = SnackBar(content: Text(e.toString()));
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
     }
@@ -94,7 +120,9 @@ class _HomePageState extends State<HomePage> {
           child: Column(
             children: [
               Expanded(
-                child: ChatMessageListViewWidget(),
+                child: ChatMessageListViewWidget(
+                  scrollController: _scrollController,
+                ),
               ),
               BottomActionsWidget(
                 messageAdder: messageAdder,

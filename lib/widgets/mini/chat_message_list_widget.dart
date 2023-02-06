@@ -7,40 +7,22 @@ import 'package:voice_chat_gpt/providers/messages_provider.dart';
 import '../micro/chat_message_widget.dart';
 
 class ChatMessageListViewWidget extends StatelessWidget {
-  final ScrollController _scrollController = ScrollController();
+  final ScrollController scrollController;
 
-  ChatMessageListViewWidget({
+  const ChatMessageListViewWidget({
     Key? key,
+    required this.scrollController,
   }) : super(key: key);
-
-  void showListViewBottom(BuildContext context) {
-    final msgProvider = context.read<MessagesProvider>();
-    final prevMsgsLength = msgProvider.previousMessageLength;
-    final msgsLength = msgProvider.messagesLength;
-    if (msgsLength > prevMsgsLength) {
-      WidgetsBinding.instance.addPostFrameCallback(
-        (_) {
-          if (_scrollController.hasClients) {
-            _scrollController.animateTo(
-                _scrollController.position.maxScrollExtent,
-                duration: const Duration(milliseconds: 500),
-                curve: Curves.fastOutSlowIn);
-          }
-        },
-      );
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
-    showListViewBottom(context);
     final msgProvider = context.watch<MessagesProvider>();
     final messages = msgProvider.messages;
 
     return GestureDetector(
       onTap: () => msgProvider.clearSelectedMessage(),
       child: ListView.builder(
-        controller: _scrollController,
+        controller: scrollController,
         itemCount: messages.length,
         itemBuilder: (context, index) {
           var message = messages[index];
