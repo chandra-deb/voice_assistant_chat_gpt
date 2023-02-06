@@ -1,6 +1,5 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 
 import '../../models/chat_message_model.dart';
 import 'individual_message_widget.dart';
@@ -38,8 +37,6 @@ class ChatMessageWidget extends StatelessWidget {
           ),
         ],
       ),
-    ).animate().fade().slide(
-          duration: const Duration(milliseconds: 100),
-        );
+    );
   }
 }
