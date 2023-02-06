@@ -106,29 +106,24 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        toolbarHeight: 100,
-        title: const Padding(
-          padding: EdgeInsets.all(8.0),
-          child: SpeakingIndicatorWidget(),
-        ),
+        toolbarHeight: 80,
+        title: const SpeakingIndicatorWidget(),
         elevation: 0,
         backgroundColor: Colors.white,
       ),
       body: SafeArea(
-          child: Container(
-        // padding: const EdgeInsets.all(15),
-        child: Column(
-          children: [
-            Expanded(
-              child: ChatMessageListViewWidget(
-                scrollController: _scrollController,
-              ),
+          child: Flex(
+        direction: Axis.vertical,
+        children: [
+          Flexible(
+            child: ChatMessageListViewWidget(
+              scrollController: _scrollController,
             ),
-            BottomActionsWidget(
-              messageAdder: messageAdder,
-            )
-          ],
-        ),
+          ),
+          BottomActionsWidget(
+            messageAdder: messageAdder,
+          )
+        ],
       )),
     );
   }
