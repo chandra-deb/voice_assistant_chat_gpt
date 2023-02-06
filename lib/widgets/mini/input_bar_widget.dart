@@ -1,8 +1,10 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:voice_chat_gpt/providers/input_button_provider.dart';
+import 'package:voice_chat_gpt/widgets/micro/mic_widget.dart';
 import 'package:voice_chat_gpt/widgets/micro/text_input_widget.dart';
 
-import '../micro/mic_widget.dart';
 import '../micro/response_loading_widget.dart';
 
 class InputBarWidget extends StatefulWidget {
@@ -20,8 +22,8 @@ class InputBarWidget extends StatefulWidget {
 class _InputBarWidgetState extends State<InputBarWidget> {
   late final TextEditingController _textController;
   late final FocusNode _focusNode;
-  bool _showMic = true;
-  bool _showLoadingResponse = false;
+  // final bool _showMic = true;
+  // bool _showLoadingResponse = false;
 
   @override
   void initState() {
@@ -32,15 +34,33 @@ class _InputBarWidgetState extends State<InputBarWidget> {
   }
 
   void listenTextChanges() {
+    final inputBtnProvider = context.read<InputButtonProvider>();
     if (_textController.text.isEmpty) {
-      setState(() {
-        _showMic = true;
-      });
+      inputBtnProvider.setShowMicTrue();
+      // setState(() {
+      //   _showMic = true;
+      // });
     } else {
-      setState(() {
-        _showMic = false;
-      });
+      inputBtnProvider.setIsShowSubmitTrue();
+      // setState(() {
+      //   _showMic = false;
+      // });
     }
+  }
+
+  Future<void> setResponseLoading(String text) async {
+    context.read<InputButtonProvider>().setShowLoadingResponseTrue();
+    // setState(() {
+    //   _showLoadingResponse = true;
+    // });
+
+    await widget.addMessage(text);
+
+    // ignore: use_build_context_synchronously
+    context.read<InputButtonProvider>().setShowMicTrue();
+    // setState(() {
+    //   _showLoadingResponse = false;
+    // });
   }
 
   @override
@@ -49,47 +69,101 @@ class _InputBarWidgetState extends State<InputBarWidget> {
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         TextInputWidget(textController: _textController, focusNode: _focusNode),
-        _showLoadingResponse
-            ? const ResponseLoadingWidget()
-            : _showMic
-                ? MicWidget(
-                    addMessage: setResponseLoading,
-                  )
-                : SizedBox(
-                    height: 50,
-                    width: 70,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(18),
+        Consumer<InputButtonProvider>(
+          builder: (context, inputBtnProvider, child) {
+            return inputBtnProvider.isShowLoadingResponse
+                ? const ResponseLoadingWidget()
+                : inputBtnProvider.isShowMic || inputBtnProvider.isShowListening
+                    ? MicWidget(
+                        addMessage: setResponseLoading,
+                      )
+                    : SizedBox(
+                        height: 50,
+                        width: 70,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(18),
+                            ),
+                            backgroundColor: Colors.white,
+                            padding: const EdgeInsets.all(5),
+                          ),
+                          onPressed: () async {
+                            final text = _textController.text.trim();
+                            _textController.clear();
+                            _focusNode.unfocus();
+                            await setResponseLoading(text);
+                          },
+                          child: const Icon(
+                            color: Colors.pink,
+                            Icons.send,
+                            size: 40,
+                          ),
                         ),
-                        backgroundColor: Colors.white,
-                        padding: const EdgeInsets.all(5),
-                      ),
-                      onPressed: () async {
-                        final text = _textController.text.trim();
-                        _textController.clear();
-                        _focusNode.unfocus();
-                        await setResponseLoading(text);
-                      },
-                      child: const Icon(
-                        color: Colors.pink,
-                        Icons.send,
-                        size: 40,
-                      ),
-                    ),
-                  ),
+                      );
+            // if (inputBtnProvider.isShowLoadingResponse) {
+            //   return const ResponseLoadingWidget();
+            // } else if (inputBtnProvider.isShowMic) {
+            //   return SizedBox(
+            //     height: 50,
+            //     width: 70,
+            //     child: ElevatedButton(
+            //       style: ElevatedButton.styleFrom(
+            //         shape: RoundedRectangleBorder(
+            //           borderRadius: BorderRadius.circular(18),
+            //         ),
+            //         backgroundColor: Colors.white,
+            //         padding: const EdgeInsets.all(5),
+            //       ),
+            //       onPressed: () async {
+            //         final text = _textController.text.trim();
+            //         _textController.clear();
+            //         _focusNode.unfocus();
+            //         await setResponseLoading(text);
+            //       },
+            //       child: const Icon(
+            //         color: Colors.pink,
+            //         Icons.send,
+            //         size: 40,
+            //       ),
+            //     ),
+            //   );
+            // }
+
+            // return MicWidget(addMessage: setResponseLoading);
+          },
+        ),
+        // _showLoadingResponse
+        //     ? const ResponseLoadingWidget()
+        //     : _showMic
+        //         ? MicWidget(
+        //             addMessage: setResponseLoading,
+        //           )
+        //         : SizedBox(
+        //             height: 50,
+        //             width: 70,
+        //             child: ElevatedButton(
+        //               style: ElevatedButton.styleFrom(
+        //                 shape: RoundedRectangleBorder(
+        //                   borderRadius: BorderRadius.circular(18),
+        //                 ),
+        //                 backgroundColor: Colors.white,
+        //                 padding: const EdgeInsets.all(5),
+        //               ),
+        //               onPressed: () async {
+        //                 final text = _textController.text.trim();
+        //                 _textController.clear();
+        //                 _focusNode.unfocus();
+        //                 await setResponseLoading(text);
+        //               },
+        //               child: const Icon(
+        //                 color: Colors.pink,
+        //                 Icons.send,
+        //                 size: 40,
+        //               ),
+        //             ),
+        //           ),
       ],
     );
-  }
-
-  Future<void> setResponseLoading(String text) async {
-    setState(() {
-      _showLoadingResponse = true;
-    });
-    await widget.addMessage(text);
-    setState(() {
-      _showLoadingResponse = false;
-    });
   }
 }

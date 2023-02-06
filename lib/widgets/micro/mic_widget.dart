@@ -1,8 +1,10 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:loading_indicator/loading_indicator.dart';
+import 'package:provider/provider.dart';
 import 'package:speech_to_text/speech_recognition_result.dart';
 import 'package:speech_to_text/speech_to_text.dart';
+import 'package:voice_chat_gpt/providers/input_button_provider.dart';
 
 class MicWidget extends StatefulWidget {
   final void Function(String result) addMessage;
@@ -19,7 +21,8 @@ class MicWidget extends StatefulWidget {
 class _MicWidgetState extends State<MicWidget> {
   final SpeechToText _speechToText = SpeechToText();
 
-  bool isListening = false;
+  late final _inputButtonProvider = context.read<InputButtonProvider>();
+  // bool isListening = false;
   String _lastWords = '';
 
   Future<void> _initSpeech() async {
@@ -48,13 +51,15 @@ class _MicWidgetState extends State<MicWidget> {
     _initSpeech();
     _speechToText.statusListener = (status) {
       if (status == 'listening') {
-        setState(() {
-          isListening = true;
-        });
+        _inputButtonProvider.setShowIsListeningTrue();
+        // setState(() {
+        //   isListening = true;
+        // });
       } else if (status == 'notListening') {
-        setState(() {
-          isListening = false;
-        });
+        _inputButtonProvider.setShowMicTrue();
+        // setState(() {
+        //   isListening = false;
+        // });
       }
     };
     super.initState();
@@ -73,7 +78,7 @@ class _MicWidgetState extends State<MicWidget> {
             backgroundColor: Colors.white,
             padding: const EdgeInsets.all(5),
           ),
-          child: isListening
+          child: _inputButtonProvider.isShowListening
               ? const LoadingIndicator(
                   indicatorType: Indicator.lineScalePulseOutRapid,
                   colors: [Colors.blue, Colors.pink, Colors.red],
@@ -87,7 +92,7 @@ class _MicWidgetState extends State<MicWidget> {
             // If not yet listening for speech start, otherwise stop
             FocusManager.instance.primaryFocus?.unfocus();
 
-            if (!isListening) {
+            if (!_inputButtonProvider.isShowListening) {
               await _startListening();
             } else {
               await _stopListening();
