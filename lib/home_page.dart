@@ -83,7 +83,7 @@ class _HomePageState extends State<HomePage> {
           toolbarHeight: 100,
           title: const Padding(
             padding: EdgeInsets.all(8.0),
-            child: SPIndicatorWidget(),
+            child: SpeakingIndicatorWidget(),
           ),
           elevation: 0,
           backgroundColor: Colors.white,

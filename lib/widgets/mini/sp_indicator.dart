@@ -4,8 +4,8 @@ import 'package:provider/provider.dart';
 
 import '../../providers/text_to_speech_provider.dart';
 
-class SPIndicatorWidget extends StatelessWidget {
-  const SPIndicatorWidget({
+class SpeakingIndicatorWidget extends StatelessWidget {
+  const SpeakingIndicatorWidget({
     Key? key,
   }) : super(key: key);
 
