@@ -96,41 +96,33 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        FocusManager.instance.primaryFocus?.unfocus();
-      },
-      onTapDown: (details) {
-        FocusManager.instance.primaryFocus?.unfocus();
-      },
-      child: Scaffold(
-        appBar: AppBar(
-          centerTitle: true,
-          toolbarHeight: 100,
-          title: const Padding(
-            padding: EdgeInsets.all(8.0),
-            child: SpeakingIndicatorWidget(),
-          ),
-          elevation: 0,
-          backgroundColor: Colors.white,
+    return Scaffold(
+      appBar: AppBar(
+        centerTitle: true,
+        toolbarHeight: 100,
+        title: const Padding(
+          padding: EdgeInsets.all(8.0),
+          child: SpeakingIndicatorWidget(),
         ),
-        body: SafeArea(
-            child: Container(
-          // padding: const EdgeInsets.all(15),
-          child: Column(
-            children: [
-              Expanded(
-                child: ChatMessageListViewWidget(
-                  scrollController: _scrollController,
-                ),
-              ),
-              BottomActionsWidget(
-                messageAdder: messageAdder,
-              )
-            ],
-          ),
-        )),
+        elevation: 0,
+        backgroundColor: Colors.white,
       ),
+      body: SafeArea(
+          child: Container(
+        // padding: const EdgeInsets.all(15),
+        child: Column(
+          children: [
+            Expanded(
+              child: ChatMessageListViewWidget(
+                scrollController: _scrollController,
+              ),
+            ),
+            BottomActionsWidget(
+              messageAdder: messageAdder,
+            )
+          ],
+        ),
+      )),
     );
   }
 }

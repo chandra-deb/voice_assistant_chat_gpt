@@ -85,6 +85,8 @@ class _MicWidgetState extends State<MicWidget> {
                 ),
           onPressed: () async {
             // If not yet listening for speech start, otherwise stop
+            FocusManager.instance.primaryFocus?.unfocus();
+
             if (!isListening) {
               await _startListening();
             } else {
