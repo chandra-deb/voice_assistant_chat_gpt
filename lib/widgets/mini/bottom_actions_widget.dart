@@ -22,7 +22,8 @@ class BottomActionsWidget extends StatelessWidget {
     final selectedMessage = context
         .select<MessagesProvider, ChatMessage?>((msg) => msg.selectedMessage);
     return AnimatedSwitcher(
-      duration: const Duration(milliseconds: 400),
+      key: ValueKey(selectedMessage?.id),
+      duration: const Duration(milliseconds: 350),
       transitionBuilder: (Widget child, Animation<double> animation) {
         return FadeTransition(
           opacity: animation,
