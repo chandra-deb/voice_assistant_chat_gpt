@@ -4,6 +4,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 import 'package:voice_chat_gpt/home_page.dart';
 import 'package:voice_chat_gpt/providers/conversation_provider.dart';
+import 'package:voice_chat_gpt/providers/input_button_provider.dart';
 import 'package:voice_chat_gpt/providers/messages_provider.dart';
 
 import 'providers/text_to_speech_provider.dart';
@@ -31,6 +32,9 @@ class MyApp extends StatelessWidget {
           ),
           ChangeNotifierProvider<MessagesProvider>(
             create: (context) => MessagesProvider(),
+          ),
+          ChangeNotifierProvider<InputButtonProvider>(
+            create: (context) => InputButtonProvider(),
           )
         ],
         child: const HomePage(),
