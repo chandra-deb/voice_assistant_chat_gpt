@@ -1,15 +1,13 @@
 import 'package:flutter/foundation.dart';
 
+import '../constants/constants.dart';
 import '../models/chat_message_model.dart';
-import 'dmlist.dart';
 
 class MessagesProvider extends ChangeNotifier {
   ChatMessage? _selectedMessage;
   ChatMessage? get selectedMessage => _selectedMessage;
 
-  final List<ChatMessage> _messages = [...dummyMessages];
-
-  List<ChatMessage> get messages => _messages;
+  List<ChatMessage> get messages => messagesBox.values.toList();
 
   void setSelectedMessage(ChatMessage chatMessage) {
     _selectedMessage = chatMessage;
@@ -22,13 +20,13 @@ class MessagesProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void addMessage(ChatMessage chatMessage) {
-    _messages.add(chatMessage);
+  void addMessage(ChatMessage chatMessage) async {
+    await messagesBox.put(chatMessage.id, chatMessage);
     notifyListeners();
   }
 
   void deleteMessage(ChatMessage chatMessage) {
-    _messages.remove(chatMessage);
+    messagesBox.delete(chatMessage.id);
 
     clearSelectedMessage();
     notifyListeners();
