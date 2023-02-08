@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:hive/hive.dart';
 import 'package:uuid/uuid.dart';
 
@@ -19,9 +20,12 @@ class ChatMessage {
   final String text;
   @HiveField(2)
   final ChatMessageType chatMessageType;
+  @HiveField(3)
+  final DateTime createdOn;
 
   ChatMessage({
     required this.text,
     required this.chatMessageType,
-  }) : id = const Uuid().v4();
+  })  : id = const Uuid().v4(),
+        createdOn = DateTime.now();
 }
