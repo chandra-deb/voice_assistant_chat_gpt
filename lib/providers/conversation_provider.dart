@@ -1,7 +1,7 @@
+import '../constants/constants.dart';
 import '../services/chat_gpt_service.dart';
 
 class ConversationProvider {
-  String _conversation = '';
   String _lastResponse = '';
   String _lastPrompt = '';
 
@@ -12,16 +12,21 @@ class ConversationProvider {
     void Function()? onResponseCompletion,
   }) async {
     _lastPrompt = prompt;
-    _conversation = "$_conversation${'Human'}: $prompt\nAI:";
+    final oldConversation =
+        conversationBox.get('conversation', defaultValue: '');
+    String newConversation = "$oldConversation${'Human'}: $prompt\nAI:";
+
+    await conversationBox.put('conversation', newConversation);
     try {
       final response = await ChatGptService().generateResponse(
-        message: _conversation,
+        message: newConversation,
       );
       _lastResponse = response.message;
       if (onResponseCompletion != null) {
         onResponseCompletion();
       }
-      _conversation = "$_conversation${response.message}\n";
+      newConversation = "$newConversation${response.message}\n";
+      await conversationBox.put('conversation', newConversation);
     } catch (e) {
       rethrow;
     }
