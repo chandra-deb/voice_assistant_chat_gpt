@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 
 import '../constants/constants.dart';
 import '../models/chat_message_model.dart';
@@ -13,6 +14,7 @@ class MessagesProvider extends ChangeNotifier {
     );
 
   void setSelectedMessage(ChatMessage chatMessage) {
+    HapticFeedback.lightImpact();
     _selectedMessage = chatMessage;
 
     notifyListeners();
@@ -28,7 +30,7 @@ class MessagesProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void deleteMessage(ChatMessage chatMessage) {
+  void deleteMessage(ChatMessage chatMessage) async {
     await chatMessage.delete();
 
     clearSelectedMessage();

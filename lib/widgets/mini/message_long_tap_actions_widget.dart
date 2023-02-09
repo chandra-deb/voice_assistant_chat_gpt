@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 
+import '../../providers/dynamic_island_provider.dart';
 import '../../providers/messages_provider.dart';
 import '../../providers/text_to_speech_provider.dart';
 
@@ -31,6 +32,7 @@ class MessageLongTapActionsWidget extends StatelessWidget {
             onTap: () {
               // final messageProvider = context.read<MessagesProvider>();
               // final message = messageProvider.selectedMessage;
+              HapticFeedback.lightImpact();
               context.read<TextToSpeechProvider>().speak(
                     text: message!.text,
                     setOnSpeakingCompletion:
@@ -53,8 +55,10 @@ class MessageLongTapActionsWidget extends StatelessWidget {
             ),
           ),
           GestureDetector(
-            onTap: () {
+            onTap: () async {
+              HapticFeedback.lightImpact();
               messageProvider.clearSelectedMessage();
+              await Clipboard.setData(ClipboardData(text: message!.text));
               setIsland(Island.copying);
               // .then(
               //   (value) {
@@ -82,9 +86,10 @@ class MessageLongTapActionsWidget extends StatelessWidget {
             ),
           ),
           GestureDetector(
-            onTap: () {
-              Share.share(message!.text);
-              messageProvider.clearSelectedMessage();
+            onTap: () async {
+              HapticFeedback.lightImpact();
+              await Share.share(message!.text).then((value) {
+                messageProvider.clearSelectedMessage();
                 setIsland(Island.sharing);
               });
             },
@@ -105,7 +110,7 @@ class MessageLongTapActionsWidget extends StatelessWidget {
           ),
           GestureDetector(
             onTap: () {
-              print('Delete RAn');
+              HapticFeedback.lightImpact();
               messageProvider.deleteMessage(message!);
               setIsland(Island.deleting);
             },
@@ -126,6 +131,7 @@ class MessageLongTapActionsWidget extends StatelessWidget {
           ),
           GestureDetector(
             onTap: () {
+              HapticFeedback.lightImpact();
               messageProvider.clearSelectedMessage();
             },
             child: Container(
