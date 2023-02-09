@@ -1,9 +1,13 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:hive/hive.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:voice_chat_gpt/home_page.dart';
+import 'package:voice_chat_gpt/models/chat_message_model.dart';
 import 'package:voice_chat_gpt/providers/conversation_provider.dart';
+import 'package:voice_chat_gpt/providers/dynamic_island_provider.dart';
 import 'package:voice_chat_gpt/providers/input_button_provider.dart';
 import 'package:voice_chat_gpt/providers/messages_provider.dart';
 
@@ -11,7 +15,15 @@ import 'providers/text_to_speech_provider.dart';
 
 void main() async {
   await dotenv.load();
-
+  WidgetsFlutterBinding.ensureInitialized();
+  var directory = await getApplicationDocumentsDirectory();
+  Hive.init(directory.path);
+  Hive.registerAdapter(ChatMessageAdapter());
+  Hive.registerAdapter(ChatMessageTypeAdapter());
+  // await Hive.deleteBoxFromDisk('messagesBox');
+  // await Hive.deleteBoxFromDisk('conversation');
+  await Hive.openBox<ChatMessage>('messagesBox');
+  await Hive.openBox<String>('conversation');
   runApp(const MyApp());
 }
 

@@ -13,3 +13,4 @@ final apiKey = dotenv.env['apiKey'];
 
 // HiveDB
 final messagesBox = Hive.box<ChatMessage>('messagesBox');
+final conversationBox = Hive.box<String>('conversation');
