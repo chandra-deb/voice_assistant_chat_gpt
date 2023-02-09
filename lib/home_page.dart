@@ -8,7 +8,7 @@ import 'providers/messages_provider.dart';
 import 'providers/text_to_speech_provider.dart';
 import 'widgets/mini/bottom_actions_widget.dart';
 import 'widgets/mini/chat_message_list_widget.dart';
-import 'widgets/mini/sp_indicator.dart';
+import 'widgets/mini/dynamic_island_indicator_widget.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
