@@ -13,6 +13,7 @@ class MessageLongTapActionsWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final messageProvider = context.read<MessagesProvider>();
     final message = messageProvider.selectedMessage;
+    final setIsland = context.watch<DynamicIslandProvider>().setIslandValue;
     return Container(
       // color: Colors.red,
       height: 50,
@@ -54,7 +55,7 @@ class MessageLongTapActionsWidget extends StatelessWidget {
           GestureDetector(
             onTap: () {
               messageProvider.clearSelectedMessage();
-              Clipboard.setData(ClipboardData(text: message!.text));
+              setIsland(Island.copying);
               // .then(
               //   (value) {
               //     ScaffoldMessenger.of(context).showSnackBar(
@@ -84,6 +85,8 @@ class MessageLongTapActionsWidget extends StatelessWidget {
             onTap: () {
               Share.share(message!.text);
               messageProvider.clearSelectedMessage();
+                setIsland(Island.sharing);
+              });
             },
             child: Container(
               padding: const EdgeInsets.all(10),
@@ -104,6 +107,7 @@ class MessageLongTapActionsWidget extends StatelessWidget {
             onTap: () {
               print('Delete RAn');
               messageProvider.deleteMessage(message!);
+              setIsland(Island.deleting);
             },
             child: Container(
               padding: const EdgeInsets.all(10),

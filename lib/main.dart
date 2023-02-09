@@ -35,6 +35,9 @@ class MyApp extends StatelessWidget {
           ),
           ChangeNotifierProvider<InputButtonProvider>(
             create: (context) => InputButtonProvider(),
+          ),
+          ChangeNotifierProvider<DynamicIslandProvider>(
+            create: (context) => DynamicIslandProvider(),
           )
         ],
         child: const HomePage(),

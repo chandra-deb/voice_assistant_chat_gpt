@@ -94,9 +94,6 @@ class _HomePageState extends State<HomePage> {
       );
       Future.delayed(const Duration(milliseconds: 50))
           .then((_) => _scrollDown());
-
-      final snackBar = SnackBar(content: Text(e.toString()));
-      ScaffoldMessenger.of(context).showSnackBar(snackBar);
     }
     _inputButtonProvider.setShowMicTrue();
   }
@@ -107,7 +104,7 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         centerTitle: true,
         toolbarHeight: 80,
-        title: const SpeakingIndicatorWidget(),
+        title: const DynamicIslandIndicatorWidget(),
         elevation: 0,
         backgroundColor: Colors.white,
       ),
