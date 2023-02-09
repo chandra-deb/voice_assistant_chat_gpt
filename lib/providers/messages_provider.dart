@@ -24,12 +24,12 @@ class MessagesProvider extends ChangeNotifier {
   }
 
   void addMessage(ChatMessage chatMessage) async {
-    await messagesBox.put(chatMessage.id, chatMessage);
+    await messagesBox.add(chatMessage);
     notifyListeners();
   }
 
   void deleteMessage(ChatMessage chatMessage) {
-    messagesBox.delete(chatMessage.id);
+    await chatMessage.delete();
 
     clearSelectedMessage();
     notifyListeners();

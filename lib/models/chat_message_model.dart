@@ -13,7 +13,7 @@ enum ChatMessageType {
 }
 
 @HiveType(typeId: 1)
-class ChatMessage {
+class ChatMessage extends HiveObject {
   @HiveField(0)
   final String id;
   @HiveField(1)
