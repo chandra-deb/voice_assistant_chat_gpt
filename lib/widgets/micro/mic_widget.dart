@@ -1,6 +1,8 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+
 import 'package:flutter/material.dart';
 import 'package:loading_indicator/loading_indicator.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:speech_to_text/speech_recognition_result.dart';
 import 'package:speech_to_text/speech_to_text.dart';
@@ -24,17 +26,36 @@ class _MicWidgetState extends State<MicWidget> {
   late final _inputButtonProvider = context.read<InputButtonProvider>();
   // bool isListening = false;
   String _lastWords = '';
+  bool isInitialized = false;
 
   Future<void> _initSpeech() async {
-    await _speechToText.initialize();
+    isInitialized = await _speechToText.initialize();
+    print(isInitialized);
   }
 
   Future<void> _startListening() async {
-    await _speechToText.listen(
-      onResult: _onSpeechResult,
-      partialResults: false,
-      listenMode: ListenMode.search,
-    );
+    if (isInitialized == false) {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            content: const Text('data'),
+            actions: [
+              ElevatedButton(
+                onPressed: () => openAppSettings(),
+                child: const Text('App Settings'),
+              )
+            ],
+          );
+        },
+      );
+    } else {
+      await _speechToText.listen(
+        onResult: _onSpeechResult,
+        partialResults: false,
+        listenMode: ListenMode.search,
+      );
+    }
   }
 
   void _onSpeechResult(SpeechRecognitionResult result) async {
