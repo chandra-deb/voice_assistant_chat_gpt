@@ -5,7 +5,7 @@ import 'package:voice_chat_gpt/providers/input_button_provider.dart';
 import 'package:voice_chat_gpt/widgets/micro/mic_widget.dart';
 import 'package:voice_chat_gpt/widgets/micro/text_input_widget.dart';
 
-import '../micro/response_loading_widget.dart';
+import '../micro/close_response_loading_widget.dart';
 
 class InputBarWidget extends StatefulWidget {
   final Future<void> Function(String text) addMessage;
@@ -64,7 +64,7 @@ class _InputBarWidgetState extends State<InputBarWidget> {
         Consumer<InputButtonProvider>(
           builder: (context, inputBtnProvider, child) {
             return inputBtnProvider.isShowLoadingResponse
-                ? const ResponseLoadingWidget()
+                ? const CloseResponseLoadingWidget()
                 : inputBtnProvider.isShowMic || inputBtnProvider.isShowListening
                     ? MicWidget(
                         addMessage: setResponseLoading,
