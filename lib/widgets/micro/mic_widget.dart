@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:speech_to_text/speech_recognition_result.dart';
 import 'package:speech_to_text/speech_to_text.dart';
 import 'package:voice_chat_gpt/providers/input_button_provider.dart';
+import 'package:voice_chat_gpt/providers/settings_provider.dart';
 
 class MicWidget extends StatefulWidget {
   final void Function(String result) addMessage;
@@ -88,6 +89,7 @@ class _MicWidgetState extends State<MicWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = context.watch<SettingsProvider>().appTheme == AppTheme.dark;
     return SizedBox(
       height: 50,
       width: 70,
@@ -96,16 +98,18 @@ class _MicWidgetState extends State<MicWidget> {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(18),
             ),
-            backgroundColor: Colors.white,
+            backgroundColor: isDark ? Colors.pink : Colors.white,
             padding: const EdgeInsets.all(5),
           ),
           child: _inputButtonProvider.isShowListening
-              ? const LoadingIndicator(
+              ? LoadingIndicator(
                   indicatorType: Indicator.lineScalePulseOutRapid,
-                  colors: [Colors.blue, Colors.pink, Colors.red],
+                  colors: isDark
+                      ? [Colors.white, Colors.blue, Colors.green]
+                      : [Colors.blue, Colors.pink, Colors.red],
                 )
-              : const Icon(
-                  color: Colors.pink,
+              : Icon(
+                  color: isDark ? Colors.white : Colors.pink,
                   Icons.mic,
                   size: 40,
                 ),

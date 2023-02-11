@@ -6,11 +6,13 @@ import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:voice_chat_gpt/home_page.dart';
 import 'package:voice_chat_gpt/models/chat_message_model.dart';
-import 'package:voice_chat_gpt/providers/conversation_provider.dart';
-import 'package:voice_chat_gpt/providers/dynamic_island_provider.dart';
-import 'package:voice_chat_gpt/providers/input_button_provider.dart';
-import 'package:voice_chat_gpt/providers/messages_provider.dart';
+import 'package:voice_chat_gpt/providers/settings_provider.dart';
+import 'package:voice_chat_gpt/utils/app_theme.dart';
 
+import 'providers/conversation_provider.dart';
+import 'providers/dynamic_island_provider.dart';
+import 'providers/input_button_provider.dart';
+import 'providers/messages_provider.dart';
 import 'providers/text_to_speech_provider.dart';
 
 void main() async {
@@ -32,30 +34,38 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Friendly',
-      home: MultiProvider(
-        providers: [
-          ChangeNotifierProvider<TextToSpeechProvider>(
-            create: (context) => TextToSpeechProvider(),
-          ),
-          Provider<ConversationProvider>(
-            create: (context) => ConversationProvider(),
-          ),
-          ChangeNotifierProvider<MessagesProvider>(
-            create: (context) => MessagesProvider(),
-          ),
-          ChangeNotifierProvider<InputButtonProvider>(
-            create: (context) => InputButtonProvider(),
-          ),
-          ChangeNotifierProvider<DynamicIslandProvider>(
-            create: (context) => DynamicIslandProvider(),
-          ),
-        ],
-        // child: const HomePage(),
-        child: const HomePage(),
-      ),
-      debugShowCheckedModeBanner: false,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider<TextToSpeechProvider>(
+          create: (context) => TextToSpeechProvider(),
+        ),
+        Provider<ConversationProvider>(
+          create: (context) => ConversationProvider(),
+        ),
+        ChangeNotifierProvider<MessagesProvider>(
+          create: (context) => MessagesProvider(),
+        ),
+        ChangeNotifierProvider<InputButtonProvider>(
+          create: (context) => InputButtonProvider(),
+        ),
+        ChangeNotifierProvider<DynamicIslandProvider>(
+          create: (context) => DynamicIslandProvider(),
+        ),
+        ChangeNotifierProvider<SettingsProvider>(
+          create: (context) => SettingsProvider(),
+        )
+      ],
+      child: Builder(builder: (context) {
+        final appTheme = context.watch<SettingsProvider>().appTheme;
+        final isDark = appTheme == AppTheme.dark;
+        return MaterialApp(
+          debugShowCheckedModeBanner: false,
+          // theme: ThemeData.light(),
+          // darkTheme: ThemeData.dark(),
+          theme: Styles.themeData(isDark, context),
+          home: const HomePage(),
+        );
+      }),
     );
   }
 }

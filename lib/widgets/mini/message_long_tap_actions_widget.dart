@@ -5,6 +5,7 @@ import 'package:share_plus/share_plus.dart';
 
 import '../../providers/dynamic_island_provider.dart';
 import '../../providers/messages_provider.dart';
+import '../../providers/settings_provider.dart';
 import '../../providers/text_to_speech_provider.dart';
 
 class MessageLongTapActionsWidget extends StatelessWidget {
@@ -12,6 +13,8 @@ class MessageLongTapActionsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = context.watch<SettingsProvider>().appTheme == AppTheme.dark;
+
     final messageProvider = context.read<MessagesProvider>();
     final message = messageProvider.selectedMessage;
     final setIsland = context.watch<DynamicIslandProvider>().setIslandValue;
@@ -20,7 +23,10 @@ class MessageLongTapActionsWidget extends StatelessWidget {
       height: 50,
       margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
       decoration: BoxDecoration(
-        color: Colors.grey.shade200,
+        color: isDark
+            ? const Color.fromARGB(115, 49, 48, 48)
+            : Colors.grey.shade200,
+        // color: Colors.grey.shade200,
         border: Border.all(width: 0.1, color: Colors.grey),
         borderRadius: const BorderRadius.all(Radius.circular(20)),
       ),

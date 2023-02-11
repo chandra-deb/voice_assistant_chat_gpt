@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../../providers/conversation_provider.dart';
 import '../../providers/input_button_provider.dart';
+import '../../providers/settings_provider.dart';
 
 class CloseResponseLoadingWidget extends StatelessWidget {
   const CloseResponseLoadingWidget({
@@ -11,6 +12,8 @@ class CloseResponseLoadingWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = context.watch<SettingsProvider>().appTheme == AppTheme.dark;
+
     return SizedBox(
       height: 50,
       width: 70,
@@ -23,7 +26,7 @@ class CloseResponseLoadingWidget extends StatelessWidget {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(18),
           ),
-          backgroundColor: Colors.white,
+          backgroundColor: isDark ? Colors.pink : Colors.white,
           padding: const EdgeInsets.all(5),
         ),
         // child: const LoadingIndicator(
@@ -31,9 +34,9 @@ class CloseResponseLoadingWidget extends StatelessWidget {
         //   colors: [Colors.red, Colors.purple, Colors.blueAccent],
         //   strokeWidth: 2,
         // ),
-        child: const Icon(
+        child: Icon(
           Icons.close,
-          color: Colors.pink,
+          color: isDark ? Colors.white : Colors.pink,
           size: 40,
         ),
       ),

@@ -71,7 +71,7 @@ class ResponseLoadingIsland extends StatelessWidget {
   Widget build(BuildContext context) {
     return const SizedBox(
       height: 50,
-      width: 70,
+      width: 60,
       child: LoadingIndicator(
         indicatorType: Indicator.ballSpinFadeLoader,
         colors: [Colors.red, Colors.purple, Colors.blueAccent],

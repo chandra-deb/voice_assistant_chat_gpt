@@ -7,7 +7,9 @@ import 'providers/conversation_provider.dart';
 import 'providers/dynamic_island_provider.dart';
 import 'providers/input_button_provider.dart';
 import 'providers/messages_provider.dart';
+import 'providers/settings_provider.dart';
 import 'providers/text_to_speech_provider.dart';
+import 'settings_page.dart';
 import 'widgets/mini/bottom_actions_widget.dart';
 import 'widgets/mini/chat_message_list_widget.dart';
 import 'widgets/mini/dynamic_island_indicator_widget.dart';
@@ -112,13 +114,35 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final appTheme = context.watch<SettingsProvider>().appTheme;
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
         toolbarHeight: 80,
-        title: const DynamicIslandIndicatorWidget(),
+        backgroundColor:
+            appTheme == AppTheme.dark ? Colors.black : Colors.white,
+        // title: const DynamicIslandIndicatorWidget(),
+        title:
+            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+          const Icon(Icons.share, color: Colors.pink, size: 40),
+          const DynamicIslandIndicatorWidget(),
+          IconButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const SettingsPage(),
+                ),
+              );
+            },
+            icon: const Icon(
+              Icons.settings,
+              color: Colors.pink,
+              size: 40,
+            ),
+          ),
+        ]),
         elevation: 0,
-        backgroundColor: Colors.white,
       ),
       body: SafeArea(
           child: Flex(

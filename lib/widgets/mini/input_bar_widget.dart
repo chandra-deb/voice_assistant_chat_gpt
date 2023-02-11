@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:voice_chat_gpt/providers/input_button_provider.dart';
+import 'package:voice_chat_gpt/providers/settings_provider.dart';
 import 'package:voice_chat_gpt/widgets/micro/mic_widget.dart';
 import 'package:voice_chat_gpt/widgets/micro/text_input_widget.dart';
 
@@ -57,6 +58,7 @@ class _InputBarWidgetState extends State<InputBarWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = context.watch<SettingsProvider>().appTheme == AppTheme.dark;
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
@@ -77,7 +79,8 @@ class _InputBarWidgetState extends State<InputBarWidget> {
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(18),
                             ),
-                            backgroundColor: Colors.white,
+                            backgroundColor:
+                                isDark ? Colors.pink : Colors.white,
                             padding: const EdgeInsets.all(5),
                           ),
                           onPressed: () async {
@@ -86,8 +89,8 @@ class _InputBarWidgetState extends State<InputBarWidget> {
                             _focusNode.unfocus();
                             await setResponseLoading(text);
                           },
-                          child: const Icon(
-                            color: Colors.pink,
+                          child: Icon(
+                            color: isDark ? Colors.white : Colors.pink,
                             Icons.send,
                             size: 40,
                           ),
