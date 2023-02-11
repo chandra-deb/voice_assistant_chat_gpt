@@ -50,8 +50,9 @@ class MyApp extends StatelessWidget {
           ),
           ChangeNotifierProvider<DynamicIslandProvider>(
             create: (context) => DynamicIslandProvider(),
-          )
+          ),
         ],
+        // child: const HomePage(),
         child: const HomePage(),
       ),
       debugShowCheckedModeBanner: false,
