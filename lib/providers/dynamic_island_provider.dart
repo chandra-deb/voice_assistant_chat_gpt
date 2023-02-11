@@ -16,14 +16,19 @@ class DynamicIslandProvider extends ChangeNotifier {
   Island get island => _island;
 
   void setIslandValue(Island island) async {
+    Island prevIsland = _island;
     if (island == Island.loading) {
       _island = island;
       notifyListeners();
     } else {
       _island = island;
       notifyListeners();
-      await Future.delayed(const Duration(seconds: 2));
-      _island = Island.name;
+      await Future.delayed(const Duration(milliseconds: 900));
+      if (prevIsland == Island.loading) {
+        _island = prevIsland;
+      } else {
+        _island = Island.name;
+      }
       notifyListeners();
     }
   }

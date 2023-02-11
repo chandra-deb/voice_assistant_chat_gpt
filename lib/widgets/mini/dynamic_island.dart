@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:loading_indicator/loading_indicator.dart';
 import 'package:provider/provider.dart';
 
 import '../../providers/dynamic_island_provider.dart';
@@ -16,23 +17,32 @@ class DynamicIsland extends StatelessWidget {
       },
       child: island == Island.copying
           ? const SingleIsland(
-              'Copied',
+              'Copied!',
               key: ValueKey(0),
             )
           : island == Island.deleting
               ? const SingleIsland(
-                  'Deleted',
+                  'Deleted!',
                   key: ValueKey(1),
                 )
               : island == Island.sharing
                   ? const SingleIsland(
-                      'Shared',
+                      'Shared!',
                       key: ValueKey(2),
                     )
-                  : const SingleIsland(
-                      'Friendly',
-                      key: ValueKey(3),
-                    ),
+                  : island == Island.loading
+                      ? const ResponseLoadingIsland()
+                      : island == Island.cancelling
+                          ? const SingleIsland(
+                              'Cancelled.',
+                              key: ValueKey(3),
+                            )
+                          : island == Island.name
+                              ? const SingleIsland(
+                                  'Friendly!',
+                                  key: ValueKey(4),
+                                )
+                              : null,
     );
   }
 }
@@ -48,6 +58,25 @@ class SingleIsland extends StatelessWidget {
       maxLines: 2,
       textAlign: TextAlign.center,
       style: const TextStyle(color: Colors.pink, fontSize: 55),
+    );
+  }
+}
+
+class ResponseLoadingIsland extends StatelessWidget {
+  const ResponseLoadingIsland({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return const SizedBox(
+      height: 50,
+      width: 70,
+      child: LoadingIndicator(
+        indicatorType: Indicator.ballSpinFadeLoader,
+        colors: [Colors.red, Colors.purple, Colors.blueAccent],
+        strokeWidth: 2,
+      ),
     );
   }
 }
