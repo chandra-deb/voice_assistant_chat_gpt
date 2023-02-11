@@ -1,8 +1,10 @@
+import 'package:cancellation_token_http/http.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'models/chat_message_model.dart';
 import 'providers/conversation_provider.dart';
+import 'providers/dynamic_island_provider.dart';
 import 'providers/input_button_provider.dart';
 import 'providers/messages_provider.dart';
 import 'providers/text_to_speech_provider.dart';
@@ -59,7 +61,13 @@ class _HomePageState extends State<HomePage> {
 
     try {
       _inputButtonProvider.setShowLoadingResponseTrue();
+      context.read<DynamicIslandProvider>().setIslandValue(Island.loading);
+
       await context.read<ConversationProvider>().generateResponse(prompt: text);
+
+      // ignore: use_build_context_synchronously
+      context.read<DynamicIslandProvider>().setLoadingDone();
+
       final repliedMessage =
           // ignore: use_build_context_synchronously
           context.read<ConversationProvider>().latestResponse;
@@ -80,7 +88,11 @@ class _HomePageState extends State<HomePage> {
 
       Future.delayed(const Duration(milliseconds: 50))
           .then((_) => _scrollDown());
-    } catch (e) {
+    } on CancelledException {
+      context.read<DynamicIslandProvider>().setLoadingDone();
+      context.read<DynamicIslandProvider>().setIslandValue(Island.cancelling);
+    } on Exception {
+      context.read<DynamicIslandProvider>().setLoadingDone();
       const fallbackMessage =
           'I think your internet connection is very slow or turned off. I can not answer anything without stable internet connection.';
       context.read<TextToSpeechProvider>().speak(
