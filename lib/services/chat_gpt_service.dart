@@ -20,8 +20,9 @@ class ChatGptService {
     required String message,
     required http.CancellationToken cancellationToken,
   }) async {
-    var uri =
-        Uri.https("api.openai.com", "/v1/engines/text-davinci-003/completions");
+    var uri = Uri.https("api.openai.com", "/v1/completions");
+
+    // Uri.https("api.openai.com", "/v1/engines/text-davinci-003/completions");
     try {
       http.Response request = await http
           .post(
@@ -32,9 +33,10 @@ class ChatGptService {
         },
         body: json.encode(
           {
+            "model": "text-davinci-003",
             "prompt": message,
             "temperature": 0.3,
-            "max_tokens": 50,
+            "max_tokens": 1000,
             "top_p": 1,
             "frequency_penalty": 0,
             "presence_penalty": 0.6,
@@ -43,17 +45,21 @@ class ChatGptService {
         cancellationToken: cancellationToken,
       )
           .timeout(
-        const Duration(seconds: 45),
+        const Duration(minutes: 1),
         onTimeout: () {
           throw Exception('Your internet is too slow to generate response!');
         },
       );
       if (request.statusCode != 200) {
+        print(request.reasonPhrase);
         throw Exception("Failed to generate response");
       }
       var data = json.decode(request.body)['choices'][0]['text'];
       return ChatResponse(message: data);
     } on http.CancelledException {
+      rethrow;
+    } catch (e) {
+      print(e);
       rethrow;
     }
   }
