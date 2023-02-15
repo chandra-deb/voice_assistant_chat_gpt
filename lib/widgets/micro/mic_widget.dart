@@ -8,6 +8,7 @@ import 'package:speech_to_text/speech_recognition_result.dart';
 import 'package:speech_to_text/speech_to_text.dart';
 import 'package:voice_chat_gpt/providers/input_button_provider.dart';
 import 'package:voice_chat_gpt/providers/settings_provider.dart';
+import 'package:voice_chat_gpt/utils/popup_dialog.dart';
 
 class MicWidget extends StatefulWidget {
   final void Function(String result) addMessage;
@@ -36,20 +37,28 @@ class _MicWidgetState extends State<MicWidget> {
 
   Future<void> _startListening() async {
     if (isInitialized == false) {
-      showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            content: const Text('data'),
-            actions: [
-              ElevatedButton(
-                onPressed: () => openAppSettings(),
-                child: const Text('App Settings'),
-              )
-            ],
-          );
-        },
-      );
+      showPopup(context,
+          child: SizedBox(
+            height: 150,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: const [
+                Text(
+                    'You have to give microphone permission to use voice recognition feature.'),
+                Text('To enable this:'),
+                Text(
+                  'Click The App Settings button',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  'Then go to Permissions and allow microphone permission',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                )
+              ],
+            ),
+          ),
+          buttonName: 'Open Settings',
+          onPressed: openAppSettings);
     } else {
       await _speechToText.listen(
         onResult: _onSpeechResult,
