@@ -23,6 +23,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   late final MessagesProvider _messagesListProvider;
+  late final SettingsProvider _settingsProvider;
   late final InputButtonProvider _inputButtonProvider;
   final ScrollController _scrollController = ScrollController();
 
@@ -31,6 +32,7 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     _messagesListProvider = context.read<MessagesProvider>();
     _inputButtonProvider = context.read<InputButtonProvider>();
+    _settingsProvider = context.read<SettingsProvider>();
 
     WidgetsBinding.instance.addPostFrameCallback(
       (_) {
@@ -53,6 +55,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> messageAdder(String text) async {
+    // final settings = context.read<SettingsProvider>();
     _messagesListProvider.addMessage(
       ChatMessage(
         text: text,
@@ -74,11 +77,13 @@ class _HomePageState extends State<HomePage> {
           // ignore: use_build_context_synchronously
           context.read<ConversationProvider>().latestResponse;
       // ignore: use_build_context_synchronously
-      await context.read<TextToSpeechProvider>().speak(
-            // ignore: use_build_context_synchronously
-            text: repliedMessage,
-          );
-      // ignore: use_build_context_synchronously
+      if (_settingsProvider.isAutoReadAloud) {
+        await context.read<TextToSpeechProvider>().speak(
+              // ignore: use_build_context_synchronously
+              text: repliedMessage,
+            );
+        // ignore: use_build_context_synchronously
+      }
 
       _messagesListProvider.addMessage(
         ChatMessage(
@@ -97,9 +102,11 @@ class _HomePageState extends State<HomePage> {
       context.read<DynamicIslandProvider>().setLoadingDone();
       const fallbackMessage =
           'I think your internet connection is very slow or turned off. I can not answer anything without stable internet connection.';
-      context.read<TextToSpeechProvider>().speak(
-            text: fallbackMessage,
-          );
+      if (_settingsProvider.isAutoReadAloud) {
+        context.read<TextToSpeechProvider>().speak(
+              text: fallbackMessage,
+            );
+      }
       _messagesListProvider.addMessage(
         ChatMessage(
           text: fallbackMessage,
@@ -116,6 +123,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     final appTheme = context.watch<SettingsProvider>().appTheme;
     return Scaffold(
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
         centerTitle: true,
         toolbarHeight: 80,

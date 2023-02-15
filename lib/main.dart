@@ -24,8 +24,10 @@ void main() async {
   Hive.registerAdapter(ChatMessageTypeAdapter());
   // await Hive.deleteBoxFromDisk('messagesBox');
   // await Hive.deleteBoxFromDisk('conversation');
+  await Hive.openBox('settings');
   await Hive.openBox<ChatMessage>('messagesBox');
   await Hive.openBox<String>('conversation');
+
   runApp(const MyApp());
 }
 
