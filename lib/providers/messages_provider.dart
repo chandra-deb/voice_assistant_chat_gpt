@@ -8,10 +8,12 @@ class MessagesProvider extends ChangeNotifier {
   ChatMessage? _selectedMessage;
   ChatMessage? get selectedMessage => _selectedMessage;
 
-  List<ChatMessage> get messages => messagesBox.values.toList()
-    ..sort(
-      (a, b) => a.createdOn.compareTo(b.createdOn),
-    );
+  List<ChatMessage> get messages {
+    return messagesBox.values.toList()
+      ..sort(
+        (a, b) => a.createdOn.compareTo(b.createdOn),
+      );
+  }
 
   void setSelectedMessage(ChatMessage chatMessage) {
     HapticFeedback.lightImpact();
