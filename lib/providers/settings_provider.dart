@@ -43,6 +43,7 @@ class SettingsProvider extends ChangeNotifier {
 
   Future<void> deleteConversation() async {
     await messagesBox.clear();
+    await conversationBox.clear();
     notifyListeners();
   }
 }
