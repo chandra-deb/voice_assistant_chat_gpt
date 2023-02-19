@@ -41,6 +41,8 @@
 //     }
 //   }
 
+import 'dart:developer' as dd;
+
 //   final dst = DialogueStateTracking();
 // }
 
@@ -74,7 +76,8 @@ class ConversationProvider {
     // String newConversation = "$oldConversation${'Human'}: $prompt\nAI:";
     dst.setLastQuestion(prompt);
     String newConversation = "$oldConversation${'Me'}:$prompt\nAI:";
-    print(newConversation);
+
+    dd.log(newConversation);
 
     // String newConversation =
     //     await conversationBox.put('conversation', newConversation);
@@ -94,8 +97,9 @@ class ConversationProvider {
       } else {
         newConversation = "Me:${dst.lastQuestion}\nAI:${dst.lastAnswer}\n";
       }
-      print("""\n$newConversation\n""");
+      // log("""\n$newConversation\n""");
       await conversationBox.put('conversation', newConversation);
+      dd.log(newConversation);
     } catch (e) {
       rethrow;
     }
@@ -110,10 +114,10 @@ class DialogueStateTracker {
   String get lastAnswer => _lastAnswer;
 
   void setLastQuestion(String lastPrompt) {
-    bool promptIsQuestion = _lastQuestion.toLowerCase().startsWith('wh') ||
-        _lastQuestion.toLowerCase().startsWith('how') ||
-        _lastQuestion.toLowerCase().split(' ')[0] == 'do' ||
-        _lastQuestion.toLowerCase().split(' ')[0] == 'does';
+    bool promptIsQuestion = lastPrompt.toLowerCase().startsWith('wh') ||
+        lastPrompt.toLowerCase().startsWith('how') ||
+        lastPrompt.toLowerCase().split(' ')[0] == 'do' ||
+        lastPrompt.toLowerCase().split(' ')[0] == 'does';
     if (promptIsQuestion) {
       _lastQuestion = lastPrompt;
     }
@@ -123,7 +127,7 @@ class DialogueStateTracker {
     if (generatedAnswer.split(' ').length <= 6) {
       _lastAnswer = generatedAnswer;
     } else {
-      _lastAnswer = 'Said';
+      _lastAnswer = '..';
     }
   }
 }
