@@ -1,7 +1,11 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
 
 import 'providers/settings_provider.dart';
+import 'services/ad_service.dart';
 import 'utils/popup_dialog.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -12,6 +16,76 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
+  late BannerAd _bannerAd;
+
+  bool isBannerAdLoaded = false;
+
+  late InterstitialAd _interstitialAd;
+
+  void _loadInterstitialAd() async {
+    log('InterstitialadAd Init');
+    await InterstitialAd.load(
+      adUnitId: AdHelperService.interstitialAdUnitId,
+      request: const AdRequest(),
+      adLoadCallback: InterstitialAdLoadCallback(
+        onAdLoaded: (ad) {
+          // ad.fullScreenContentCallback = FullScreenContentCallback(
+          //   onAdDismissedFullScreenContent: (ad) {
+          //     // _moveToHome();
+          //   },
+          // );
+
+          // setState(() {
+          _interstitialAd = ad;
+          _interstitialAd.show();
+          // });
+        },
+        onAdFailedToLoad: (err) async {
+          log('Failed to load an interstitial ad: ${err.message}');
+          await Future.delayed(const Duration(seconds: 5));
+          _loadInterstitialAd();
+        },
+      ),
+    );
+  }
+
+  _initBannerAd() {
+    _bannerAd = BannerAd(
+      size: AdSize.banner,
+      adUnitId: AdHelperService.bannerAdUnitId,
+      listener: BannerAdListener(
+        onAdLoaded: (ad) {
+          setState(() {
+            isBannerAdLoaded = true;
+          });
+        },
+        onAdFailedToLoad: (ad, error) async {
+          ad.dispose();
+          log(error.message);
+          await Future.delayed(const Duration(seconds: 15));
+          _initBannerAd();
+        },
+      ),
+      request: const AdRequest(),
+    );
+
+    _bannerAd.load();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _bannerAd.dispose();
+    _interstitialAd.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _loadInterstitialAd();
+    _initBannerAd();
+  }
+
   @override
   Widget build(BuildContext context) {
     final settings = context.watch<SettingsProvider>();
@@ -26,6 +100,15 @@ class _SettingsPageState extends State<SettingsPage> {
       ),
       body: ListView(
         children: [
+          isBannerAdLoaded
+              ? SizedBox(
+                  height: _bannerAd.size.height.toDouble(),
+                  width: _bannerAd.size.width.toDouble(),
+                  child: AdWidget(
+                    ad: _bannerAd,
+                  ),
+                )
+              : const SizedBox(),
           ListTile(
             leading: const Icon(Icons.surround_sound),
             title: const Text('Auto Read Message'),
