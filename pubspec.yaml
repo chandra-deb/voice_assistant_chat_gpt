@@ -38,6 +38,7 @@ dependencies:
   flutter_dotenv: ^5.0.2
   flutter_list_view: ^1.1.21
   flutter_tts: ^3.6.3
+  google_mobile_ads: ^2.3.0
   hive: ^2.2.3
   loading_indicator: ^3.1.0
   path_provider: ^2.0.12

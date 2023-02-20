@@ -25,15 +25,15 @@ class _SettingsPageState extends State<SettingsPage> {
   void _loadInterstitialAd() async {
     log('InterstitialadAd Init');
     await InterstitialAd.load(
-      adUnitId: AdHelperService.interstitialAdUnitId,
+      adUnitId: AdHelperService.interstitialAdUnitIdForSettingsPage,
       request: const AdRequest(),
       adLoadCallback: InterstitialAdLoadCallback(
         onAdLoaded: (ad) {
-          // ad.fullScreenContentCallback = FullScreenContentCallback(
-          //   onAdDismissedFullScreenContent: (ad) {
-          //     // _moveToHome();
-          //   },
-          // );
+          ad.fullScreenContentCallback = const FullScreenContentCallback(
+              // onAdDismissedFullScreenContent: (ad) {
+
+              // },
+              );
 
           // setState(() {
           _interstitialAd = ad;

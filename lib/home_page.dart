@@ -139,7 +139,9 @@ class _HomePageState extends State<HomePage> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const SettingsPage(),
+                  builder: (context) {
+                    return const SettingsPage();
+                  },
                 ),
               );
             },
@@ -153,19 +155,20 @@ class _HomePageState extends State<HomePage> {
         elevation: 0,
       ),
       body: SafeArea(
-          child: Flex(
-        direction: Axis.vertical,
-        children: [
-          Flexible(
-            child: ChatMessageListViewWidget(
-              scrollController: _scrollController,
+        child: Flex(
+          direction: Axis.vertical,
+          children: [
+            Flexible(
+              child: ChatMessageListViewWidget(
+                scrollController: _scrollController,
+              ),
             ),
-          ),
-          BottomActionsWidget(
-            messageAdder: messageAdder,
-          )
-        ],
-      )),
+            BottomActionsWidget(
+              messageAdder: messageAdder,
+            )
+          ],
+        ),
+      ),
     );
   }
 }
